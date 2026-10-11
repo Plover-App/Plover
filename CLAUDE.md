@@ -8,9 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | Document | Use it when |
 | --- | --- |
-| [RigRoom-Product-and-Data-Brief.md](Docs/ASOT/RigRoom-Product-and-Data-Brief.md) | You need to remember what this is, the data sources, or the scoring model |
-| [RigRoom-PRD.md](Docs/ASOT/RigRoom-PRD.md) | You're writing code. **If a requirement isn't here, it isn't in scope** — and an FR is only in scope for the release it is tagged with (R0, R1, …) |
-| [RigRoom-Implementation-Plan.md](Docs/ASOT/RigRoom-Implementation-Plan.md) | You're deciding what to do next, sequencing milestones, or need a default for an open decision |
+| [Plover-Product-and-Data-Brief.md](Docs/ASOT/Plover-Product-and-Data-Brief.md) | You need to remember what this is, the data sources, or the scoring model |
+| [Plover-PRD.md](Docs/ASOT/Plover-PRD.md) | You're writing code. **If a requirement isn't here, it isn't in scope** — and an FR is only in scope for the release it is tagged with (R0, R1, …) |
+| [Plover-Implementation-Plan.md](Docs/ASOT/Plover-Implementation-Plan.md) | You're deciding what to do next, sequencing milestones, or need a default for an open decision |
 
 One authoritative home per fact. A document earns its place by answering a question someone actually asks; register a new one in this table and in `.github/copilot-instructions.md` on the same commit.
 
@@ -27,6 +27,7 @@ One authoritative home per fact. A document earns its place by answering a quest
 
 - **Infra source of truth** will be the Bicep modules under `infra/`. Do not trust hand-drawn diagrams or older docs for Azure resource configuration. Nothing is created by hand in the portal.
 - Frozen snapshots (an `ARCHIVE/` or `Obsolete/` folder, if one is added) are **never** cited as current.
+- **Business documents are not in this repo.** Pricing and plans, budgets and spend, competitive landscape, data-licensing and legal requirements, and business decisions live in the private **ADS** repo, cloned beside this one; `ADS/...` paths point there (e.g. `ADS/products/plover/money/Plover_Money.md`). The product is now named **Plover**; this repo and its docs still say Plover. A new document about running the business goes to ADS, not `Docs/`.
 - Path-scoped rules (C#, ASP.NET, Blazor, Markdown, Testing) live in [.claude/rules/](.claude/rules/) and load when matching files are touched. Edit them there: `.github/instructions/*.instructions.md` are symlinks to the same files for Copilot.
 - Claude Code skills live in [.claude/skills/](.claude/skills/): `dotnet-best-practices`, `csharp-async`, `csharp-docs`, `appinsights-instrumentation`, `az-cost-optimize`, `frontend-design`.
   Copilot-format agents and remaining skills live in [.github/agents/](.github/agents/) and [.github/skills/](.github/skills/) (e.g. `code-review`, `bicep-plan`, `dotnet-maui`, `create-architectural-decision-record`).
@@ -50,23 +51,23 @@ Do not commit issue work directly to `main`. If the branch already exists, check
 
 ## Repo Layout
 
-One monorepo holds the .NET solution, the Python pipeline, dbt, and Bicep, so one PR can change a contract and both its producer and consumer. The repo root is the plan's `rigroom/` folder, and the plan's `docs/` is `Docs/`. Use the **SLNX** solution format (`dotnet` CLI handles it; older `dotnet sln` subcommands may not).
+One monorepo holds the .NET solution, the Python pipeline, dbt, and Bicep, so one PR can change a contract and both its producer and consumer. The repo root is the plan's `plover/` folder, and the plan's `docs/` is `Docs/`. Use the **SLNX** solution format (`dotnet` CLI handles it; older `dotnet sln` subcommands may not).
 
 | Path | Role | References |
 | --- | --- | --- |
-| `src/RigRoom.Domain` | Rig profile, rig-fit rule, confidence labels, linear referencing (NetTopologySuite). **Zero infra dependencies** (guarded by `DomainDependencyTests`). | — |
-| `src/RigRoom.Contracts` | DTOs + validation shared by API, MAUI, and Blazor | — |
-| `src/RigRoom.ApiClient` | Typed HTTP client, offline outbox interfaces | Contracts |
-| `src/RigRoom.Data` | EF Core + NetTopologySuite, migrations | Domain |
-| `src/RigRoom.Api` | ASP.NET Core 10 **minimal APIs**, one route group per feature | Domain, Contracts, Data |
-| `src/RigRoom.Mobile` | .NET MAUI, XAML + CommunityToolkit.Mvvm, Mapsui; `net10.0-android` + `net10.0-ios` | Domain, Contracts, ApiClient |
-| `src/RigRoom.Web` | Blazor WASM: admin queue (R0), trip planner (R1); MapLibre via JS interop | Contracts, ApiClient |
+| `src/Plover.Domain` | Rig profile, rig-fit rule, confidence labels, linear referencing (NetTopologySuite). **Zero infra dependencies** (guarded by `DomainDependencyTests`). | — |
+| `src/Plover.Contracts` | DTOs + validation shared by API, MAUI, and Blazor | — |
+| `src/Plover.ApiClient` | Typed HTTP client, offline outbox interfaces | Contracts |
+| `src/Plover.Data` | EF Core + NetTopologySuite, migrations | Domain |
+| `src/Plover.Api` | ASP.NET Core 10 **minimal APIs**, one route group per feature | Domain, Contracts, Data |
+| `src/Plover.Mobile` | .NET MAUI, XAML + CommunityToolkit.Mvvm, Mapsui; `net10.0-android` + `net10.0-ios` | Domain, Contracts, ApiClient |
+| `src/Plover.Web` | Blazor WASM: admin queue (R0), trip planner (R1); MapLibre via JS interop | Contracts, ApiClient |
 | `pipeline/` | Python: `ingest/`, `candidates/`, `imagery/`, `terrain/`, `packs/`; `dbt/` for scoring | — |
 | `infra/` | Bicep modules + per-environment parameter files | — |
-| `tests/` | .NET unit + integration tests (Testcontainers PostGIS); `RigRoom.{Project}.Tests` | Project under test |
+| `tests/` | .NET unit + integration tests (Testcontainers PostGIS); `Plover.{Project}.Tests` | Project under test |
 | `Docs/` | `ASOT/` canon, `ADR/`, field protocol, plans | — |
 
-Root build files: `RigRoom.slnx` (everything), `RigRoom.NoMobile.slnf` (everything except `RigRoom.Mobile`, for CI and machines without the `maui` workload), `global.json` (SDK pin + MTP test runner), `Directory.Build.props` (nullable, implicit usings, C# 14, code style enforced in build). Target frameworks stay in each csproj because Mobile multi-targets.
+Root build files: `Plover.slnx` (everything), `Plover.NoMobile.slnf` (everything except `Plover.Mobile`, for CI and machines without the `maui` workload), `global.json` (SDK pin + MTP test runner), `Directory.Build.props` (nullable, implicit usings, C# 14, code style enforced in build). Target frameworks stay in each csproj because Mobile multi-targets.
 
 Mobile references Domain because drive mode runs the rig-fit rule and route projection on the device with no network.
 
@@ -111,7 +112,7 @@ Target: .NET 10, C# 14, nullable enabled, implicit usings enabled. Always check 
 ### Entities and DTOs
 
 - Entities inherit an abstract `EntityBase`. Identity fields are `init`-only (`Id`, `CreatedAtUtc`, `CreatedByUserId`); `MarkAsUpdated(userId)` stamps `UpdatedAtUtc` / `UpdatedByUserId`.
-- DTOs live in `RigRoom.Contracts`; use `record` types. Naming: `{Entity}CreateRequestDto`, `{Entity}UpdateRequestDto`, `{Entity}SearchRequestDto`, `{Entity}DetailResponseDto`, `{Entity}SummaryResponseDto`.
+- DTOs live in `Plover.Contracts`; use `record` types. Naming: `{Entity}CreateRequestDto`, `{Entity}UpdateRequestDto`, `{Entity}SearchRequestDto`, `{Entity}DetailResponseDto`, `{Entity}SummaryResponseDto`.
 - `PagedResult<T>` is a sealed record (`Page`, `PageSize`, `TotalCount`, `Items`).
 - **Never expose entity types in API responses.**
 
@@ -141,7 +142,7 @@ dbt lives in `pipeline/dbt/` (dbt-postgres) and turns `evidence` into scores. It
 ### Validation
 
 - Guard clauses in every service method for required parameters.
-- Static validator classes for complex multi-field rules (in `RigRoom.Contracts` so MAUI and Blazor share them).
+- Static validator classes for complex multi-field rules (in `Plover.Contracts` so MAUI and Blazor share them).
 - Block dangerous characters (`<`, `>`, `;`, `'`, `"`, `\`, `\0`) in free-text search inputs. Enforce max string lengths; page size cap is **100**.
 - **422** for validation errors, **400** for unparsable input.
 
@@ -212,10 +213,10 @@ In this mode, pass a project with `--project` and a solution with `--solution` (
 Development is on macOS (zsh, VS Code).
 
 ```bash
-dotnet restore RigRoom.slnx
-dotnet build RigRoom.slnx --configuration Release              # needs the maui workload + platform SDKs
-dotnet build RigRoom.NoMobile.slnf --configuration Release     # everything except Mobile
-dotnet test --solution RigRoom.NoMobile.slnf --configuration Release
+dotnet restore Plover.slnx
+dotnet build Plover.slnx --configuration Release              # needs the maui workload + platform SDKs
+dotnet build Plover.NoMobile.slnf --configuration Release     # everything except Mobile
+dotnet test --solution Plover.NoMobile.slnf --configuration Release
 dotnet test --project tests/<Project>/<Project>.csproj --configuration Release --no-build -- --coverage --coverage-output-format cobertura
 dotnet test --project tests/<Project>/<Project>.csproj --configuration Release --no-build -- --filter-class "*.SomeTests"
 ```

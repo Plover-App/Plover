@@ -1,0 +1,14 @@
+{
+  "solution": {
+    "path": "Plover.slnx",
+    "projects": [
+      "src/Plover.Domain/Plover.Domain.csproj",
+      "src/Plover.Contracts/Plover.Contracts.csproj",
+      "src/Plover.ApiClient/Plover.ApiClient.csproj",
+      "src/Plover.Data/Plover.Data.csproj",
+      "src/Plover.Api/Plover.Api.csproj",
+      "src/Plover.Web/Plover.Web.csproj",
+      "tests/Plover.Domain.Tests/Plover.Domain.Tests.csproj"
+    ]
+  }
+}

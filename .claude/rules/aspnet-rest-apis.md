@@ -2,15 +2,15 @@
 description: 'Guidelines for building REST APIs with ASP.NET Core minimal APIs'
 # Claude Code reads `paths`; GitHub Copilot reads `applyTo` (via the symlink in .github/instructions/).
 paths:
-  - "src/RigRoom.Api/**/*.cs"
-  - "src/RigRoom.Api/**/*.json"
-  - "tests/RigRoom.Api*/**/*.cs"
-applyTo: 'src/RigRoom.Api/**/*.cs, src/RigRoom.Api/**/*.json, tests/RigRoom.Api*/**/*.cs'
+  - "src/Plover.Api/**/*.cs"
+  - "src/Plover.Api/**/*.json"
+  - "tests/Plover.Api*/**/*.cs"
+applyTo: 'src/Plover.Api/**/*.cs, src/Plover.Api/**/*.json, tests/Plover.Api*/**/*.cs'
 ---
 
 # ASP.NET Core API Development
 
-The API (`RigRoom.Api`) uses ASP.NET Core 10 **minimal APIs**, not controllers. Project-specific patterns are in `CLAUDE.md` (mirrored in `.github/copilot-instructions.md`); this file covers general API practice.
+The API (`Plover.Api`) uses ASP.NET Core 10 **minimal APIs**, not controllers. Project-specific patterns are in `CLAUDE.md` (mirrored in `.github/copilot-instructions.md`); this file covers general API practice.
 
 ## API Design
 
@@ -28,7 +28,7 @@ The API (`RigRoom.Api`) uses ASP.NET Core 10 **minimal APIs**, not controllers. 
 
 ## Validation and Error Handling
 
-- Validate request DTOs with the shared validators in `RigRoom.Contracts`.
+- Validate request DTOs with the shared validators in `Plover.Contracts`.
 - One global `IExceptionHandler` with `AddProblemDetails()` produces RFC 7807 responses; handlers contain no `try/catch`.
 - Never leak stack traces or internal messages outside Development.
 

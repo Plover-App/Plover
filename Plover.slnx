@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Plover.Domain/Plover.Domain.csproj" />
+    <Project Path="src/Plover.Contracts/Plover.Contracts.csproj" />
+    <Project Path="src/Plover.ApiClient/Plover.ApiClient.csproj" />
+    <Project Path="src/Plover.Data/Plover.Data.csproj" />
+    <Project Path="src/Plover.Api/Plover.Api.csproj" />
+    <Project Path="src/Plover.Mobile/Plover.Mobile.csproj" />
+    <Project Path="src/Plover.Web/Plover.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Plover.Domain.Tests/Plover.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

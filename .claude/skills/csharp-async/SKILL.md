@@ -34,8 +34,8 @@ Apply these when writing async C# code, and when reviewing it, report violations
 
 ## ConfigureAwait
 
-- ASP.NET Core has no synchronization context: `ConfigureAwait(false)` is unnecessary in `RigRoom.Api`.
-- Use `ConfigureAwait(false)` in shared library code consumed by UI apps (`RigRoom.ApiClient`, `RigRoom.Domain`, `RigRoom.Contracts`).
+- ASP.NET Core has no synchronization context: `ConfigureAwait(false)` is unnecessary in `Plover.Api`.
+- Use `ConfigureAwait(false)` in shared library code consumed by UI apps (`Plover.ApiClient`, `Plover.Domain`, `Plover.Contracts`).
 - **Never** in MAUI view models or Blazor components where the continuation touches UI state.
 
 ## UI Apps (MAUI and Blazor WASM)

@@ -58,6 +58,6 @@ Use Auth0 as the single IdP for the MAUI app, the Blazor WASM admin app, and the
 
 ## References
 
-- **REF-001**: [PRD, FR-02](../ASOT/RigRoom-PRD.md#functional-requirements)
-- **REF-002**: [Implementation Plan, Assumptions and defaults](../ASOT/RigRoom-Implementation-Plan.md#assumptions-and-defaults)
+- **REF-001**: [PRD, FR-02](../ASOT/Plover-PRD.md#functional-requirements)
+- **REF-002**: [Implementation Plan, Assumptions and defaults](../ASOT/Plover-Implementation-Plan.md#assumptions-and-defaults)
 - **REF-003**: [ADR-0001: Native .NET MAUI mobile app](adr-0001-native-maui-mobile-app.md)

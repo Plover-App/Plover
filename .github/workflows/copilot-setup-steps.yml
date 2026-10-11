@@ -37,10 +37,10 @@ jobs:
           python-version: "3.12"
 
       # Skipped until the solution and pipeline exist; restore once they do.
-      # The runner has no maui workload, so restore the solution filter that excludes RigRoom.Mobile.
+      # The runner has no maui workload, so restore the solution filter that excludes Plover.Mobile.
       - name: Restore NuGet packages
-        if: hashFiles('RigRoom.NoMobile.slnf') != ''
-        run: dotnet restore RigRoom.NoMobile.slnf
+        if: hashFiles('Plover.NoMobile.slnf') != ''
+        run: dotnet restore Plover.NoMobile.slnf
 
       - name: Install pipeline dependencies
         if: hashFiles('pipeline/requirements.txt') != ''

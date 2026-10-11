@@ -58,6 +58,6 @@ Use Azure Database for PostgreSQL Flexible Server with the PostGIS extension as 
 
 ## References
 
-- **REF-001**: [Product and Data Brief, architecture section](../ASOT/RigRoom-Product-and-Data-Brief.md)
-- **REF-002**: [PRD, Platform decisions](../ASOT/RigRoom-PRD.md#platform-decisions)
-- **REF-003**: [Implementation Plan, Data pipeline build order](../ASOT/RigRoom-Implementation-Plan.md#data-pipeline-build-order)
+- **REF-001**: [Product and Data Brief, architecture section](../ASOT/Plover-Product-and-Data-Brief.md)
+- **REF-002**: [PRD, Platform decisions](../ASOT/Plover-PRD.md#platform-decisions)
+- **REF-003**: [Implementation Plan, Data pipeline build order](../ASOT/Plover-Implementation-Plan.md#data-pipeline-build-order)

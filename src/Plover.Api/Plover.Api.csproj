@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Plover.Api.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plover.Domain\Plover.Domain.csproj" />
+    <ProjectReference Include="..\Plover.Contracts\Plover.Contracts.csproj" />
+    <ProjectReference Include="..\Plover.Data\Plover.Data.csproj" />
+  </ItemGroup>
+
+</Project>

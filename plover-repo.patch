@@ -1,0 +1,1585 @@
+diff --git a/.claude/rules/aspnet-rest-apis.md b/.claude/rules/aspnet-rest-apis.md
+index 9193f6b..36cf396 100644
+--- a/.claude/rules/aspnet-rest-apis.md
++++ b/.claude/rules/aspnet-rest-apis.md
+@@ -2,15 +2,15 @@
+ description: 'Guidelines for building REST APIs with ASP.NET Core minimal APIs'
+ # Claude Code reads `paths`; GitHub Copilot reads `applyTo` (via the symlink in .github/instructions/).
+ paths:
+-  - "src/RigRoom.Api/**/*.cs"
+-  - "src/RigRoom.Api/**/*.json"
+-  - "tests/RigRoom.Api*/**/*.cs"
+-applyTo: 'src/RigRoom.Api/**/*.cs, src/RigRoom.Api/**/*.json, tests/RigRoom.Api*/**/*.cs'
++  - "src/Plover.Api/**/*.cs"
++  - "src/Plover.Api/**/*.json"
++  - "tests/Plover.Api*/**/*.cs"
++applyTo: 'src/Plover.Api/**/*.cs, src/Plover.Api/**/*.json, tests/Plover.Api*/**/*.cs'
+ ---
+ 
+ # ASP.NET Core API Development
+ 
+-The API (`RigRoom.Api`) uses ASP.NET Core 10 **minimal APIs**, not controllers. Project-specific patterns are in `CLAUDE.md` (mirrored in `.github/copilot-instructions.md`); this file covers general API practice.
++The API (`Plover.Api`) uses ASP.NET Core 10 **minimal APIs**, not controllers. Project-specific patterns are in `CLAUDE.md` (mirrored in `.github/copilot-instructions.md`); this file covers general API practice.
+ 
+ ## API Design
+ 
+@@ -28,7 +28,7 @@ The API (`RigRoom.Api`) uses ASP.NET Core 10 **minimal APIs**, not controllers.
+ 
+ ## Validation and Error Handling
+ 
+-- Validate request DTOs with the shared validators in `RigRoom.Contracts`.
++- Validate request DTOs with the shared validators in `Plover.Contracts`.
+ - One global `IExceptionHandler` with `AddProblemDetails()` produces RFC 7807 responses; handlers contain no `try/catch`.
+ - Never leak stack traces or internal messages outside Development.
+ 
+diff --git a/.claude/rules/blazor.md b/.claude/rules/blazor.md
+index 7623d8f..9b8a280 100644
+--- a/.claude/rules/blazor.md
++++ b/.claude/rules/blazor.md
+@@ -24,7 +24,7 @@ applyTo: '**/*.razor, **/*.razor.cs, **/*.razor.css'
+ 
+ - Use lifecycle methods appropriately (`OnInitializedAsync`, `OnParametersSetAsync`).
+ - Use `@bind` for data binding and `EventCallback` for child-to-parent events, passing minimal data.
+-- Use dependency injection for services; call the API only through the typed client in `RigRoom.ApiClient`.
++- Use dependency injection for services; call the API only through the typed client in `Plover.ApiClient`.
+ - Reduce unnecessary renders; use `ShouldRender()` where it measurably helps, and call `StateHasChanged()` deliberately.
+ 
+ ## Maps (MapLibre via JS Interop)
+@@ -36,7 +36,7 @@ applyTo: '**/*.razor, **/*.razor.cs, **/*.razor.css'
+ ## Error Handling and Validation
+ 
+ - Wrap page content in `ErrorBoundary`; show user-facing feedback on API failures.
+-- Validate forms with the shared validators from `RigRoom.Contracts` so client and API rules cannot drift.
++- Validate forms with the shared validators from `Plover.Contracts` so client and API rules cannot drift.
+ 
+ ## State
+ 
+diff --git a/.claude/rules/csharp.md b/.claude/rules/csharp.md
+index 4fb3aa9..8f7373e 100644
+--- a/.claude/rules/csharp.md
++++ b/.claude/rules/csharp.md
+@@ -54,8 +54,8 @@ applyTo: '**/*.cs'
+ 
+ ## Shared Code Across API, MAUI and Blazor
+ 
+-- Code in `RigRoom.Domain` and `RigRoom.Contracts` must not reference ASP.NET Core, EF Core, or MAUI types — it runs on the server, the phone, and in the browser.
+-- Validators in `RigRoom.Contracts` are the single source of validation rules; clients and the API both call them.
++- Code in `Plover.Domain` and `Plover.Contracts` must not reference ASP.NET Core, EF Core, or MAUI types — it runs on the server, the phone, and in the browser.
++- Validators in `Plover.Contracts` are the single source of validation rules; clients and the API both call them.
+ 
+ ## Performance
+ 
+diff --git a/.claude/rules/testing.md b/.claude/rules/testing.md
+index 5351e2d..349185b 100644
+--- a/.claude/rules/testing.md
++++ b/.claude/rules/testing.md
+@@ -6,7 +6,7 @@ paths:
+ applyTo: 'tests/**/*.cs'
+ ---
+ 
+-# RigRoom Testing Guidelines — xUnit v3 + Moq
++# Plover Testing Guidelines — xUnit v3 + Moq
+ 
+ ## Stack
+ 
+@@ -26,7 +26,7 @@ applyTo: 'tests/**/*.cs'
+ 
+ ## Test File Placement
+ 
+-- Mirror the source folder inside the test project, e.g. `src/RigRoom.Api/Services/CheckInService.cs` → `tests/RigRoom.Api.Tests/Services/CheckInServiceTests.cs`.
++- Mirror the source folder inside the test project, e.g. `src/Plover.Api/Services/CheckInService.cs` → `tests/Plover.Api.Tests/Services/CheckInServiceTests.cs`.
+ - Shared test data lives in `tests/*/Fakes/`.
+ 
+ ## Naming Convention
+diff --git a/.claude/skills/appinsights-instrumentation/SKILL.md b/.claude/skills/appinsights-instrumentation/SKILL.md
+index 874aa42..f325030 100644
+--- a/.claude/skills/appinsights-instrumentation/SKILL.md
++++ b/.claude/skills/appinsights-instrumentation/SKILL.md
+@@ -1,11 +1,11 @@
+ ---
+ name: appinsights-instrumentation
+-description: Add or fix Azure Application Insights telemetry (OpenTelemetry) for the RigRoom API, Container Apps pipeline jobs, or the Bicep that provisions App Insights. Use when the user asks to add telemetry, tracing, logging to Azure Monitor, App Insights, or observability.
++description: Add or fix Azure Application Insights telemetry (OpenTelemetry) for the Plover API, Container Apps pipeline jobs, or the Bicep that provisions App Insights. Use when the user asks to add telemetry, tracing, logging to Azure Monitor, App Insights, or observability.
+ ---
+ 
+ # App Insights Instrumentation
+ 
+-Instrument RigRoom services to send traces, metrics, and logs to Azure Application Insights through the Azure Monitor OpenTelemetry distro.
++Instrument Plover services to send traces, metrics, and logs to Azure Application Insights through the Azure Monitor OpenTelemetry distro.
+ 
+ ## Ground rules (from CLAUDE.md)
+ 
+@@ -20,10 +20,10 @@ Read the code to determine which of these applies; ask only if it is genuinely u
+ 
+ | Component | Hosting | Approach |
+ | --- | --- | --- |
+-| `RigRoom.Api` (ASP.NET Core 10) | Azure Container Apps | `Azure.Monitor.OpenTelemetry.AspNetCore` |
++| `Plover.Api` (ASP.NET Core 10) | Azure Container Apps | `Azure.Monitor.OpenTelemetry.AspNetCore` |
+ | Python pipeline jobs | Container Apps Jobs | `azure-monitor-opentelemetry` |
+-| `RigRoom.Web` (Blazor WASM) | Static hosting | Usually not instrumented directly; rely on API-side telemetry. Ask before adding browser SDKs. |
+-| `RigRoom.Mobile` (MAUI) | Device | App Insights is not a mobile crash/analytics tool. Raise this with the user rather than wiring it in. |
++| `Plover.Web` (Blazor WASM) | Static hosting | Usually not instrumented directly; rely on API-side telemetry. Ask before adding browser SDKs. |
++| `Plover.Mobile` (MAUI) | Device | App Insights is not a mobile crash/analytics tool. Raise this with the user rather than wiring it in. |
+ 
+ ## Step 2: Provision App Insights in Bicep
+ 
+@@ -34,7 +34,7 @@ param location string = resourceGroup().location
+ param environmentName string
+ 
+ resource logs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
+-  name: 'log-rigroom-${environmentName}'
++  name: 'log-plover-${environmentName}'
+   location: location
+   properties: {
+     sku: { name: 'PerGB2018' }
+@@ -44,7 +44,7 @@ resource logs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
+ }
+ 
+ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+-  name: 'appi-rigroom-${environmentName}'
++  name: 'appi-plover-${environmentName}'
+   location: location
+   kind: 'web'
+   properties: {
+@@ -61,7 +61,7 @@ Pass the connection string into each container app / job as a secret-backed envi
+ ## Step 3: Instrument the ASP.NET Core API
+ 
+ ```bash
+-dotnet add src/RigRoom.Api package Azure.Monitor.OpenTelemetry.AspNetCore
++dotnet add src/Plover.Api package Azure.Monitor.OpenTelemetry.AspNetCore
+ ```
+ 
+ ```csharp
+@@ -77,7 +77,7 @@ if (!string.IsNullOrWhiteSpace(builder.Configuration["APPLICATIONINSIGHTS_CONNEC
+ - `UseAzureMonitor()` reads `APPLICATIONINSIGHTS_CONNECTION_STRING` itself and enables ASP.NET Core, HttpClient, and `ILogger` export.
+ - Add EF Core / Npgsql tracing (`Npgsql.OpenTelemetry` → `AddNpgsql()`) when database spans are wanted; make sure SQL parameter values are not recorded.
+ - Write a `PiiFilterActivityProcessor : BaseProcessor<Activity>` that strips or coarsens tags carrying coordinates, emails, or SAS URLs (query strings) in `OnEnd`. Cover it with a unit test.
+-- Set `service.name` per component (e.g. `rigroom-api`) via `ConfigureResource` so the Application Map is readable.
++- Set `service.name` per component (e.g. `plover-api`) via `ConfigureResource` so the Application Map is readable.
+ - Keep logging via `ILogger` message templates; don't add a second logging pipeline.
+ 
+ ## Step 4: Instrument Python pipeline jobs
+diff --git a/.claude/skills/az-cost-optimize/SKILL.md b/.claude/skills/az-cost-optimize/SKILL.md
+index 8836861..68301a7 100644
+--- a/.claude/skills/az-cost-optimize/SKILL.md
++++ b/.claude/skills/az-cost-optimize/SKILL.md
+@@ -5,7 +5,7 @@ description: Analyze the Bicep in infra/ and the deployed Azure resources for co
+ 
+ # Azure Cost Optimize
+ 
+-Analyze RigRoom's Bicep and deployed Azure resources, recommend cost savings with evidence, and — only after the user confirms — create one GitHub issue per optimization plus one epic.
++Analyze Plover's Bicep and deployed Azure resources, recommend cost savings with evidence, and — only after the user confirms — create one GitHub issue per optimization plus one epic.
+ 
+ ## Ground rules
+ 
+@@ -18,7 +18,7 @@ Analyze RigRoom's Bicep and deployed Azure resources, recommend cost savings wit
+ 
+ ```bash
+ az account show --query "{sub:id, name:name}" -o table
+-az group list --query "[?contains(name,'rigroom')].name" -o tsv
++az group list --query "[?contains(name,'plover')].name" -o tsv
+ az resource list -g <rg> --query "[].{name:name,type:type,sku:sku.name,location:location}" -o table
+ ```
+ 
+@@ -64,7 +64,7 @@ Document: resource → current SKU → estimated monthly cost → pricing source
+ 
+ ## Step 4: Recommend
+ 
+-Patterns that fit RigRoom's stack:
++Patterns that fit Plover's stack:
+ 
+ - **Container Apps**: API and Valhalla at `minReplicas: 0` in dev (R0 plan); right-size CPU/memory from metrics; Consumption profile unless a dedicated profile is justified; jobs sized to their actual peak.
+ - **PostgreSQL Flexible Server**: Burstable tier for dev/prod in R0; stop the dev server outside working hours (scheduled automation, declared in Bicep/workflow); no HA or geo-redundant backup in dev; backup retention at the minimum that is acceptable.
+diff --git a/.claude/skills/csharp-async/SKILL.md b/.claude/skills/csharp-async/SKILL.md
+index 21f50a9..f05ab89 100644
+--- a/.claude/skills/csharp-async/SKILL.md
++++ b/.claude/skills/csharp-async/SKILL.md
+@@ -34,8 +34,8 @@ Apply these when writing async C# code, and when reviewing it, report violations
+ 
+ ## ConfigureAwait
+ 
+-- ASP.NET Core has no synchronization context: `ConfigureAwait(false)` is unnecessary in `RigRoom.Api`.
+-- Use `ConfigureAwait(false)` in shared library code consumed by UI apps (`RigRoom.ApiClient`, `RigRoom.Domain`, `RigRoom.Contracts`).
++- ASP.NET Core has no synchronization context: `ConfigureAwait(false)` is unnecessary in `Plover.Api`.
++- Use `ConfigureAwait(false)` in shared library code consumed by UI apps (`Plover.ApiClient`, `Plover.Domain`, `Plover.Contracts`).
+ - **Never** in MAUI view models or Blazor components where the continuation touches UI state.
+ 
+ ## UI Apps (MAUI and Blazor WASM)
+diff --git a/.claude/skills/csharp-docs/SKILL.md b/.claude/skills/csharp-docs/SKILL.md
+index 07443b6..0cbbe57 100644
+--- a/.claude/skills/csharp-docs/SKILL.md
++++ b/.claude/skills/csharp-docs/SKILL.md
+@@ -7,7 +7,7 @@ description: Write or review C# XML documentation comments (summary, param, retu
+ 
+ Apply to the files or scope the user names; otherwise to public types changed in the current git diff.
+ 
+-- Public members get XML comments. Interfaces in `RigRoom.Domain` / `RigRoom.Contracts` and DTOs always do — DTO comments flow into the OpenAPI description.
++- Public members get XML comments. Interfaces in `Plover.Domain` / `Plover.Contracts` and DTOs always do — DTO comments flow into the OpenAPI description.
+ - Document internal members when they are complex or not self-explanatory. Don't add boilerplate comments to obvious private code.
+ - Explain **why** in `<remarks>` when a design decision isn't obvious (e.g. why a query stays in PostGIS, why a write is idempotent).
+ 
+diff --git a/.claude/skills/dotnet-best-practices/SKILL.md b/.claude/skills/dotnet-best-practices/SKILL.md
+index 992c633..f7ebee0 100644
+--- a/.claude/skills/dotnet-best-practices/SKILL.md
++++ b/.claude/skills/dotnet-best-practices/SKILL.md
+@@ -13,7 +13,7 @@ The authoritative conventions are in `CLAUDE.md` and `.github/instructions/*.ins
+ ## Checklist
+ 
+ ### Structure & layering
+-- `RigRoom.Domain` / `RigRoom.Contracts` reference no ASP.NET Core, EF Core, or MAUI types.
++- `Plover.Domain` / `Plover.Contracts` reference no ASP.NET Core, EF Core, or MAUI types.
+ - Endpoint handlers are thin (caller → sealed service → mapper → `TypedResults`), grouped with `MapGroup` per feature, no `try/catch`.
+ - Services are `sealed`, scoped, use `IUserContextAccessor` (never `HttpContext`), start with guard clauses, return entities.
+ - Mappers are static extension classes, pure, start with `ArgumentNullException.ThrowIfNull()`.
+diff --git a/.claude/skills/frontend-design/SKILL.md b/.claude/skills/frontend-design/SKILL.md
+index 03e1a05..b9273a5 100644
+--- a/.claude/skills/frontend-design/SKILL.md
++++ b/.claude/skills/frontend-design/SKILL.md
+@@ -1,16 +1,16 @@
+ ---
+ name: frontend-design
+-description: Design and build distinctive, production-grade UI for the RigRoom Blazor WASM web app (admin queue, trip planner), MAUI screens, or standalone HTML pages, avoiding generic AI aesthetics. Use when the user asks to build, style, redesign, or beautify a page, component, screen, or layout.
++description: Design and build distinctive, production-grade UI for the Plover Blazor WASM web app (admin queue, trip planner), MAUI screens, or standalone HTML pages, avoiding generic AI aesthetics. Use when the user asks to build, style, redesign, or beautify a page, component, screen, or layout.
+ ---
+ 
+-Adapted from the `frontend-design` skill in Anthropic's public skills repository, tuned for RigRoom's stack and users.
++Adapted from the `frontend-design` skill in Anthropic's public skills repository, tuned for Plover's stack and users.
+ 
+ This skill guides creation of distinctive, production-grade interfaces that avoid generic "AI slop" aesthetics. Implement real working code with careful attention to aesthetic detail and deliberate creative choices.
+ 
+ ## Know the context first
+ 
+-- **Blazor WASM (`RigRoom.Web`)**: Razor components with scoped `.razor.css`; maps via the MapLibre JS-interop wrapper. Follow `.github/instructions/blazor.instructions.md`.
+-- **MAUI (`RigRoom.Mobile`)**: XAML + CommunityToolkit.Mvvm, Mapsui map. Styles live in shared resource dictionaries, not inline.
++- **Blazor WASM (`Plover.Web`)**: Razor components with scoped `.razor.css`; maps via the MapLibre JS-interop wrapper. Follow `.github/instructions/blazor.instructions.md`.
++- **MAUI (`Plover.Mobile`)**: XAML + CommunityToolkit.Mvvm, Mapsui map. Styles live in shared resource dictionaries, not inline.
+ - **Users**: RVers driving large rigs. Drive mode is read **at a glance, in a moving vehicle, often in bright sun** — large type, very high contrast, big touch targets (≥ 48 dp), minimal text, nothing that demands precise taps. The admin queue is a desk tool used for long sessions — dense but calm.
+ - If a design system or brand tokens exist in the repo, use them. Otherwise define tokens (CSS custom properties / XAML resources) once and reference them everywhere — never inline ad-hoc colors.
+ 
+diff --git a/.github/agents/azure-ai-architect.agent.md b/.github/agents/azure-ai-architect.agent.md
+index 70e5f61..73ed3bd 100644
+--- a/.github/agents/azure-ai-architect.agent.md
++++ b/.github/agents/azure-ai-architect.agent.md
+@@ -166,7 +166,7 @@ When reviewing an application or feature, proactively assess opportunities acros
+ 
+ ### Application-Specific Patterns for This Repository
+ 
+-RigRoom (see `Docs/ASOT/`) uses AI mainly in the offline data pipeline, not in the request path:
++Plover (see `Docs/ASOT/`) uses AI mainly in the offline data pipeline, not in the request path:
+ 
+ - **Imagery classification**: vision model on NAIP / commercial tiles returns usable length bucket, width, surface, and lane separation as JSON with its own confidence; results are written as `evidence` rows, never as final scores
+ - **LLM schema mapping**: proposes a column mapping per state DOT layer; a human approves it once and it is stored as config, not re-prompted every run
+diff --git a/.github/agents/code-review.agent.md b/.github/agents/code-review.agent.md
+index 388f289..90fd640 100644
+--- a/.github/agents/code-review.agent.md
++++ b/.github/agents/code-review.agent.md
+@@ -1,9 +1,9 @@
+ ---
+-description: "Use when: reviewing C# code, checking ASP.NET Core API conventions, auditing RigRoom architecture, checking for OWASP security issues, validating ownership and authorization, reviewing Blazor components, checking minimal API endpoints, EF Core/PostGIS queries, licensing rules, checking mappers or DTOs, verifying service layer patterns, code review, best practices check, PR review, review this file, review my code, does this follow conventions"
++description: "Use when: reviewing C# code, checking ASP.NET Core API conventions, auditing Plover architecture, checking for OWASP security issues, validating ownership and authorization, reviewing Blazor components, checking minimal API endpoints, EF Core/PostGIS queries, licensing rules, checking mappers or DTOs, verifying service layer patterns, code review, best practices check, PR review, review this file, review my code, does this follow conventions"
+ tools: [read, edit, search]
+ ---
+ 
+-You are a senior code reviewer for the RigRoom project. You review C#/.NET code against the project's established conventions, architectural rules, and security requirements.
++You are a senior code reviewer for the Plover project. You review C#/.NET code against the project's established conventions, architectural rules, and security requirements.
+ 
+ ## Constraints
+ 
+@@ -32,10 +32,10 @@ Load and apply all of the following before reviewing:
+ ## Review Categories
+ 
+ ### Architecture & Layer Violations
+-- `RigRoom.Domain` and `RigRoom.Contracts` must not reference ASP.NET Core, EF Core, or MAUI types — they run on server, phone, and browser.
++- `Plover.Domain` and `Plover.Contracts` must not reference ASP.NET Core, EF Core, or MAUI types — they run on server, phone, and browser.
+ - Services must be `sealed` and never depend on ASP.NET types directly (no `HttpContext` / `IHttpContextAccessor` — use `IUserContextAccessor`).
+ - Endpoint handlers stay thin: resolve caller → service → map to DTO. No business logic or data access in handlers.
+-- Entities go up to the service; DTOs live in `RigRoom.Contracts`. Never return entities from endpoints.
++- Entities go up to the service; DTOs live in `Plover.Contracts`. Never return entities from endpoints.
+ - Mappers must be pure — no repository, `DbContext`, or service calls.
+ - The API must not write to pipeline-owned tables (`evidence` from ingest, `scores`). `evidence` is append-only everywhere.
+ 
+diff --git a/.github/copilot-instructions.md b/.github/copilot-instructions.md
+index 9c2cbeb..d999d6a 100644
+--- a/.github/copilot-instructions.md
++++ b/.github/copilot-instructions.md
+@@ -1,4 +1,4 @@
+-# Copilot Instructions — RigRoom
++# Copilot Instructions — Plover
+ 
+ ## Working an Issue
+ 
+@@ -13,22 +13,23 @@ Do not commit issue work directly to `main`. If the branch already exists, check
+ 
+ ## Project Documentation
+ 
+-- Product canon is in `Docs/ASOT/`: `RigRoom-Product-and-Data-Brief.md` (what this is, data sources, scoring), `RigRoom-PRD.md` (**if a requirement isn't there, it isn't in scope**; each FR is scoped to its tagged release), `RigRoom-Implementation-Plan.md` (milestones, sequencing, defaults for open decisions).
++- Product canon is in `Docs/ASOT/`: `Plover-Product-and-Data-Brief.md` (what this is, data sources, scoring), `Plover-PRD.md` (**if a requirement isn't there, it isn't in scope**; each FR is scoped to its tagged release), `Plover-Implementation-Plan.md` (milestones, sequencing, defaults for open decisions).
+ - One authoritative home per fact. A new canon doc is registered here and in `CLAUDE.md` on the same commit.
++- Business documents (pricing, budgets, competitive landscape, data-licensing and legal requirements, business decisions) are not in this repo: they live in the private ADS repo, under `ADS/products/plover/`.
+ - Architecture decisions are ADRs in `Docs/ADR/` (`adr-NNNN-title-slug.md`, one per stack decision): 0001 native MAUI, 0002 PostgreSQL + PostGIS over Cosmos DB, 0003 Valhalla, 0004 Auth0, 0005 Azure Container Apps, 0006 Stripe web checkout. A reversed decision is marked Superseded by a new ADR, not rewritten.
+ - Bicep under `infra/` is the source of truth for Azure resources. Nothing is created by hand in the portal.
+ - Build the current release only (R0 now). Do not build R1+ features early unless the Implementation Plan says so.
+ 
+ ## Project Structure
+ 
+-- Solution: `RigRoom.slnx` (everything) and `RigRoom.NoMobile.slnf` (all but Mobile, for CI and machines without the `maui` workload). `global.json` pins the SDK and selects the MTP test runner.
+-- `src/RigRoom.Domain` — rig-fit rule, confidence labels, linear referencing (NetTopologySuite). Zero infra dependencies and no project references (guarded by `DomainDependencyTests`).
+-- `src/RigRoom.Contracts` — DTOs + validators shared by API, MAUI, Blazor.
+-- `src/RigRoom.ApiClient` — typed HTTP client, offline outbox interfaces. References Contracts.
+-- `src/RigRoom.Data` — EF Core + NetTopologySuite (PostgreSQL + PostGIS), migrations. References Domain.
+-- `src/RigRoom.Api` — ASP.NET Core 10 minimal APIs, one route group per feature. References Domain, Contracts, Data.
+-- `src/RigRoom.Mobile` — .NET MAUI (`net10.0-android`, `net10.0-ios`), CommunityToolkit.Mvvm, Mapsui. References Domain, Contracts, ApiClient.
+-- `src/RigRoom.Web` — Blazor WASM admin queue / trip planner, MapLibre via JS interop. References Contracts, ApiClient.
++- Solution: `Plover.slnx` (everything) and `Plover.NoMobile.slnf` (all but Mobile, for CI and machines without the `maui` workload). `global.json` pins the SDK and selects the MTP test runner.
++- `src/Plover.Domain` — rig-fit rule, confidence labels, linear referencing (NetTopologySuite). Zero infra dependencies and no project references (guarded by `DomainDependencyTests`).
++- `src/Plover.Contracts` — DTOs + validators shared by API, MAUI, Blazor.
++- `src/Plover.ApiClient` — typed HTTP client, offline outbox interfaces. References Contracts.
++- `src/Plover.Data` — EF Core + NetTopologySuite (PostgreSQL + PostGIS), migrations. References Domain.
++- `src/Plover.Api` — ASP.NET Core 10 minimal APIs, one route group per feature. References Domain, Contracts, Data.
++- `src/Plover.Mobile` — .NET MAUI (`net10.0-android`, `net10.0-ios`), CommunityToolkit.Mvvm, Mapsui. References Domain, Contracts, ApiClient.
++- `src/Plover.Web` — Blazor WASM admin queue / trip planner, MapLibre via JS interop. References Contracts, ApiClient.
+ - `pipeline/` (Python + dbt), `infra/` (Bicep), `tests/`.
+ - Target: .NET 10, C# 14, nullable enabled, implicit usings enabled. Always check current Microsoft documentation for .NET 10 changes, via the `microsoft-learn` MCP server.
+ 
+@@ -68,7 +69,7 @@ Do not commit issue work directly to `main`. If the branch already exists, check
+ ## Entities & DTOs
+ 
+ - Entities inherit abstract `EntityBase`; `init`-only `Id`, `CreatedAtUtc`, `CreatedByUserId`; `MarkAsUpdated(userId)` stamps update audit fields.
+-- DTOs are `record`s in `RigRoom.Contracts`: `{Entity}CreateRequestDto`, `{Entity}UpdateRequestDto`, `{Entity}SearchRequestDto`, `{Entity}DetailResponseDto`, `{Entity}SummaryResponseDto`.
++- DTOs are `record`s in `Plover.Contracts`: `{Entity}CreateRequestDto`, `{Entity}UpdateRequestDto`, `{Entity}SearchRequestDto`, `{Entity}DetailResponseDto`, `{Entity}SummaryResponseDto`.
+ - `PagedResult<T>` sealed record: `Page`, `PageSize`, `TotalCount`, `Items`.
+ - Never expose entity types in API responses.
+ 
+@@ -88,7 +89,7 @@ Do not commit issue work directly to `main`. If the branch already exists, check
+ 
+ ## Validation & Errors
+ 
+-- Guard clauses in every service method. Shared validators live in `RigRoom.Contracts`.
++- Guard clauses in every service method. Shared validators live in `Plover.Contracts`.
+ - Block `<`, `>`, `;`, `'`, `"`, `\`, `\0` in free-text search; enforce max lengths; page size cap 100.
+ - 422 for validation errors, 400 for unparsable input.
+ - Global `IExceptionHandler` + ProblemDetails: `ArgumentException` → 400, `UnauthorizedAccessException` → 401, `KeyNotFoundException` → 404, `ConflictException` → 409, else 500. Include an `errorId` GUID that is also logged; never expose internals outside Development.
+@@ -117,7 +118,7 @@ Red → Green → Refactor, not optional.
+ - Never modify a failing test to make it pass — fix the implementation.
+ - Never skip Refactor.
+ - Python pipeline: pytest; scoring: dbt tests (scores in 0–1, every score has evidence).
+-- xUnit v3 4.x on MTP v2: `dotnet test --project <csproj>` or `--solution RigRoom.NoMobile.slnf`, MTP options after `--`. Assertions use AwesomeAssertions.
++- xUnit v3 4.x on MTP v2: `dotnet test --project <csproj>` or `--solution Plover.NoMobile.slnf`, MTP options after `--`. Assertions use AwesomeAssertions.
+ 
+ ## CI/CD
+ 
+diff --git a/.github/skills/github-issues/references/templates.md b/.github/skills/github-issues/references/templates.md
+index 054dbf1..e3366bf 100644
+--- a/.github/skills/github-issues/references/templates.md
++++ b/.github/skills/github-issues/references/templates.md
+@@ -92,7 +92,7 @@ For simple issues:
+ ## Deferred / Future-state Template
+ 
+ For work being parked rather than done now. If it carries a revisit condition, also add it
+-as a row in the **Decisions** table of `Docs/ASOT/RigRoom-Implementation-Plan.md`.
++as a row in the **Decisions** table of `Docs/ASOT/Plover-Implementation-Plan.md`.
+ 
+ ```markdown
+ ## Summary
+diff --git a/.github/workflows/copilot-setup-steps.yml b/.github/workflows/copilot-setup-steps.yml
+index a07e448..56f7021 100644
+--- a/.github/workflows/copilot-setup-steps.yml
++++ b/.github/workflows/copilot-setup-steps.yml
+@@ -37,10 +37,10 @@ jobs:
+           python-version: "3.12"
+ 
+       # Skipped until the solution and pipeline exist; restore once they do.
+-      # The runner has no maui workload, so restore the solution filter that excludes RigRoom.Mobile.
++      # The runner has no maui workload, so restore the solution filter that excludes Plover.Mobile.
+       - name: Restore NuGet packages
+-        if: hashFiles('RigRoom.NoMobile.slnf') != ''
+-        run: dotnet restore RigRoom.NoMobile.slnf
++        if: hashFiles('Plover.NoMobile.slnf') != ''
++        run: dotnet restore Plover.NoMobile.slnf
+ 
+       - name: Install pipeline dependencies
+         if: hashFiles('pipeline/requirements.txt') != ''
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 36a209f..eb59237 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -8,9 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
+ 
+ | Document | Use it when |
+ | --- | --- |
+-| [RigRoom-Product-and-Data-Brief.md](Docs/ASOT/RigRoom-Product-and-Data-Brief.md) | You need to remember what this is, the data sources, or the scoring model |
+-| [RigRoom-PRD.md](Docs/ASOT/RigRoom-PRD.md) | You're writing code. **If a requirement isn't here, it isn't in scope** — and an FR is only in scope for the release it is tagged with (R0, R1, …) |
+-| [RigRoom-Implementation-Plan.md](Docs/ASOT/RigRoom-Implementation-Plan.md) | You're deciding what to do next, sequencing milestones, or need a default for an open decision |
++| [Plover-Product-and-Data-Brief.md](Docs/ASOT/Plover-Product-and-Data-Brief.md) | You need to remember what this is, the data sources, or the scoring model |
++| [Plover-PRD.md](Docs/ASOT/Plover-PRD.md) | You're writing code. **If a requirement isn't here, it isn't in scope** — and an FR is only in scope for the release it is tagged with (R0, R1, …) |
++| [Plover-Implementation-Plan.md](Docs/ASOT/Plover-Implementation-Plan.md) | You're deciding what to do next, sequencing milestones, or need a default for an open decision |
+ 
+ One authoritative home per fact. A document earns its place by answering a question someone actually asks; register a new one in this table and in `.github/copilot-instructions.md` on the same commit.
+ 
+@@ -27,6 +27,7 @@ One authoritative home per fact. A document earns its place by answering a quest
+ 
+ - **Infra source of truth** will be the Bicep modules under `infra/`. Do not trust hand-drawn diagrams or older docs for Azure resource configuration. Nothing is created by hand in the portal.
+ - Frozen snapshots (an `ARCHIVE/` or `Obsolete/` folder, if one is added) are **never** cited as current.
++- **Business documents are not in this repo.** Pricing and plans, budgets and spend, competitive landscape, data-licensing and legal requirements, and business decisions live in the private **ADS** repo, cloned beside this one; `ADS/...` paths point there (e.g. `ADS/products/plover/money/Plover_Money.md`). The product is now named **Plover**; this repo and its docs still say Plover. A new document about running the business goes to ADS, not `Docs/`.
+ - Path-scoped rules (C#, ASP.NET, Blazor, Markdown, Testing) live in [.claude/rules/](.claude/rules/) and load when matching files are touched. Edit them there: `.github/instructions/*.instructions.md` are symlinks to the same files for Copilot.
+ - Claude Code skills live in [.claude/skills/](.claude/skills/): `dotnet-best-practices`, `csharp-async`, `csharp-docs`, `appinsights-instrumentation`, `az-cost-optimize`, `frontend-design`.
+   Copilot-format agents and remaining skills live in [.github/agents/](.github/agents/) and [.github/skills/](.github/skills/) (e.g. `code-review`, `bicep-plan`, `dotnet-maui`, `create-architectural-decision-record`).
+@@ -50,23 +51,23 @@ Do not commit issue work directly to `main`. If the branch already exists, check
+ 
+ ## Repo Layout
+ 
+-One monorepo holds the .NET solution, the Python pipeline, dbt, and Bicep, so one PR can change a contract and both its producer and consumer. The repo root is the plan's `rigroom/` folder, and the plan's `docs/` is `Docs/`. Use the **SLNX** solution format (`dotnet` CLI handles it; older `dotnet sln` subcommands may not).
++One monorepo holds the .NET solution, the Python pipeline, dbt, and Bicep, so one PR can change a contract and both its producer and consumer. The repo root is the plan's `plover/` folder, and the plan's `docs/` is `Docs/`. Use the **SLNX** solution format (`dotnet` CLI handles it; older `dotnet sln` subcommands may not).
+ 
+ | Path | Role | References |
+ | --- | --- | --- |
+-| `src/RigRoom.Domain` | Rig profile, rig-fit rule, confidence labels, linear referencing (NetTopologySuite). **Zero infra dependencies** (guarded by `DomainDependencyTests`). | — |
+-| `src/RigRoom.Contracts` | DTOs + validation shared by API, MAUI, and Blazor | — |
+-| `src/RigRoom.ApiClient` | Typed HTTP client, offline outbox interfaces | Contracts |
+-| `src/RigRoom.Data` | EF Core + NetTopologySuite, migrations | Domain |
+-| `src/RigRoom.Api` | ASP.NET Core 10 **minimal APIs**, one route group per feature | Domain, Contracts, Data |
+-| `src/RigRoom.Mobile` | .NET MAUI, XAML + CommunityToolkit.Mvvm, Mapsui; `net10.0-android` + `net10.0-ios` | Domain, Contracts, ApiClient |
+-| `src/RigRoom.Web` | Blazor WASM: admin queue (R0), trip planner (R1); MapLibre via JS interop | Contracts, ApiClient |
++| `src/Plover.Domain` | Rig profile, rig-fit rule, confidence labels, linear referencing (NetTopologySuite). **Zero infra dependencies** (guarded by `DomainDependencyTests`). | — |
++| `src/Plover.Contracts` | DTOs + validation shared by API, MAUI, and Blazor | — |
++| `src/Plover.ApiClient` | Typed HTTP client, offline outbox interfaces | Contracts |
++| `src/Plover.Data` | EF Core + NetTopologySuite, migrations | Domain |
++| `src/Plover.Api` | ASP.NET Core 10 **minimal APIs**, one route group per feature | Domain, Contracts, Data |
++| `src/Plover.Mobile` | .NET MAUI, XAML + CommunityToolkit.Mvvm, Mapsui; `net10.0-android` + `net10.0-ios` | Domain, Contracts, ApiClient |
++| `src/Plover.Web` | Blazor WASM: admin queue (R0), trip planner (R1); MapLibre via JS interop | Contracts, ApiClient |
+ | `pipeline/` | Python: `ingest/`, `candidates/`, `imagery/`, `terrain/`, `packs/`; `dbt/` for scoring | — |
+ | `infra/` | Bicep modules + per-environment parameter files | — |
+-| `tests/` | .NET unit + integration tests (Testcontainers PostGIS); `RigRoom.{Project}.Tests` | Project under test |
++| `tests/` | .NET unit + integration tests (Testcontainers PostGIS); `Plover.{Project}.Tests` | Project under test |
+ | `Docs/` | `ASOT/` canon, `ADR/`, field protocol, plans | — |
+ 
+-Root build files: `RigRoom.slnx` (everything), `RigRoom.NoMobile.slnf` (everything except `RigRoom.Mobile`, for CI and machines without the `maui` workload), `global.json` (SDK pin + MTP test runner), `Directory.Build.props` (nullable, implicit usings, C# 14, code style enforced in build). Target frameworks stay in each csproj because Mobile multi-targets.
++Root build files: `Plover.slnx` (everything), `Plover.NoMobile.slnf` (everything except `Plover.Mobile`, for CI and machines without the `maui` workload), `global.json` (SDK pin + MTP test runner), `Directory.Build.props` (nullable, implicit usings, C# 14, code style enforced in build). Target frameworks stay in each csproj because Mobile multi-targets.
+ 
+ Mobile references Domain because drive mode runs the rig-fit rule and route projection on the device with no network.
+ 
+@@ -111,7 +112,7 @@ Target: .NET 10, C# 14, nullable enabled, implicit usings enabled. Always check
+ ### Entities and DTOs
+ 
+ - Entities inherit an abstract `EntityBase`. Identity fields are `init`-only (`Id`, `CreatedAtUtc`, `CreatedByUserId`); `MarkAsUpdated(userId)` stamps `UpdatedAtUtc` / `UpdatedByUserId`.
+-- DTOs live in `RigRoom.Contracts`; use `record` types. Naming: `{Entity}CreateRequestDto`, `{Entity}UpdateRequestDto`, `{Entity}SearchRequestDto`, `{Entity}DetailResponseDto`, `{Entity}SummaryResponseDto`.
++- DTOs live in `Plover.Contracts`; use `record` types. Naming: `{Entity}CreateRequestDto`, `{Entity}UpdateRequestDto`, `{Entity}SearchRequestDto`, `{Entity}DetailResponseDto`, `{Entity}SummaryResponseDto`.
+ - `PagedResult<T>` is a sealed record (`Page`, `PageSize`, `TotalCount`, `Items`).
+ - **Never expose entity types in API responses.**
+ 
+@@ -141,7 +142,7 @@ dbt lives in `pipeline/dbt/` (dbt-postgres) and turns `evidence` into scores. It
+ ### Validation
+ 
+ - Guard clauses in every service method for required parameters.
+-- Static validator classes for complex multi-field rules (in `RigRoom.Contracts` so MAUI and Blazor share them).
++- Static validator classes for complex multi-field rules (in `Plover.Contracts` so MAUI and Blazor share them).
+ - Block dangerous characters (`<`, `>`, `;`, `'`, `"`, `\`, `\0`) in free-text search inputs. Enforce max string lengths; page size cap is **100**.
+ - **422** for validation errors, **400** for unparsable input.
+ 
+@@ -212,10 +213,10 @@ In this mode, pass a project with `--project` and a solution with `--solution` (
+ Development is on macOS (zsh, VS Code).
+ 
+ ```bash
+-dotnet restore RigRoom.slnx
+-dotnet build RigRoom.slnx --configuration Release              # needs the maui workload + platform SDKs
+-dotnet build RigRoom.NoMobile.slnf --configuration Release     # everything except Mobile
+-dotnet test --solution RigRoom.NoMobile.slnf --configuration Release
++dotnet restore Plover.slnx
++dotnet build Plover.slnx --configuration Release              # needs the maui workload + platform SDKs
++dotnet build Plover.NoMobile.slnf --configuration Release     # everything except Mobile
++dotnet test --solution Plover.NoMobile.slnf --configuration Release
+ dotnet test --project tests/<Project>/<Project>.csproj --configuration Release --no-build -- --coverage --coverage-output-format cobertura
+ dotnet test --project tests/<Project>/<Project>.csproj --configuration Release --no-build -- --filter-class "*.SomeTests"
+ ```
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 1c31a7b..e45837b 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -2,7 +2,7 @@
+ 
+   <!--
+     Settings shared by every .NET project in the repo. Target frameworks stay in each
+-    csproj because RigRoom.Mobile multi-targets (net10.0-android;net10.0-ios).
++    csproj because Plover.Mobile multi-targets (net10.0-android;net10.0-ios).
+   -->
+   <PropertyGroup>
+     <LangVersion>14</LangVersion>
+diff --git a/Docs/ADR/adr-0001-native-maui-mobile-app.md b/Docs/ADR/adr-0001-native-maui-mobile-app.md
+index c6a9096..9e44983 100644
+--- a/Docs/ADR/adr-0001-native-maui-mobile-app.md
++++ b/Docs/ADR/adr-0001-native-maui-mobile-app.md
+@@ -21,7 +21,7 @@ The developer's stack is .NET (ASP.NET Core, Blazor), and business logic such as
+ 
+ ## Decision
+ 
+-Build `RigRoom.Mobile` as a native .NET MAUI app with XAML UI and MVVM (CommunityToolkit.Mvvm), targeting `net10.0-android` and `net10.0-ios` only. Use the Mapsui native MAUI control with offline tile packs. Share logic through .NET class libraries (`RigRoom.Domain`, `RigRoom.Contracts`, `RigRoom.ApiClient`) rather than shared UI.
++Build `Plover.Mobile` as a native .NET MAUI app with XAML UI and MVVM (CommunityToolkit.Mvvm), targeting `net10.0-android` and `net10.0-ios` only. Use the Mapsui native MAUI control with offline tile packs. Share logic through .NET class libraries (`Plover.Domain`, `Plover.Contracts`, `Plover.ApiClient`) rather than shared UI.
+ 
+ ## Consequences
+ 
+@@ -29,20 +29,20 @@ Build `RigRoom.Mobile` as a native .NET MAUI app with XAML UI and MVVM (Communit
+ 
+ - **POS-001**: Native controls give smoother map panning, platform-standard lists and sheets, and better accessibility than a WebView UI. This matters in a moving vehicle.
+ - **POS-002**: Direct access to background location, geofencing, and local notifications without a JavaScript bridge. R1 background alerts depend on this.
+-- **POS-003**: Drive mode runs the same `RigRoom.Domain` code (NetTopologySuite, rig-fit rule) as the API, so on-device and server answers cannot drift.
++- **POS-003**: Drive mode runs the same `Plover.Domain` code (NetTopologySuite, rig-fit rule) as the API, so on-device and server answers cannot drift.
+ - **POS-004**: One language and toolchain across mobile, web, and API, which suits a solo developer working with Claude Code.
+ 
+ ### Negative
+ 
+ - **NEG-001**: Two UI stacks: XAML on mobile, Razor on web. UI code is not shared.
+-- **NEG-002**: Builds need the `maui` workload plus platform SDKs (Xcode on a current macOS for iOS; JDK and Android SDK for Android). CI and machines without them build `RigRoom.NoMobile.slnf`.
++- **NEG-002**: Builds need the `maui` workload plus platform SDKs (Xcode on a current macOS for iOS; JDK and Android SDK for Android). CI and machines without them build `Plover.NoMobile.slnf`.
+ - **NEG-003**: Offline vector rendering in Mapsui is unproven for this use and is the top platform risk.
+ 
+ ## Alternatives Considered
+ 
+ ### MAUI Blazor Hybrid
+ 
+-- **ALT-001**: **Description**: MAUI shell hosting Razor components in a BlazorWebView, sharing UI with `RigRoom.Web`.
++- **ALT-001**: **Description**: MAUI shell hosting Razor components in a BlazorWebView, sharing UI with `Plover.Web`.
+ - **ALT-002**: **Rejection Reason**: The UI renders in a WebView, with weaker scroll and gesture feel on a map-heavy screen and a less clean path to CarPlay later.
+ 
+ ### Progressive Web App
+@@ -64,6 +64,6 @@ Build `RigRoom.Mobile` as a native .NET MAUI app with XAML UI and MVVM (Communit
+ 
+ ## References
+ 
+-- **REF-001**: [PRD, Platform decisions](../ASOT/RigRoom-PRD.md#platform-decisions)
+-- **REF-002**: [Implementation Plan, Risks, spikes and fallbacks](../ASOT/RigRoom-Implementation-Plan.md#risks-spikes-and-fallbacks)
++- **REF-001**: [PRD, Platform decisions](../ASOT/Plover-PRD.md#platform-decisions)
++- **REF-002**: [Implementation Plan, Risks, spikes and fallbacks](../ASOT/Plover-Implementation-Plan.md#risks-spikes-and-fallbacks)
+ - **REF-003**: [ADR-0004: Auth0 as the identity provider](adr-0004-auth0-identity-provider.md)
+diff --git a/Docs/ADR/adr-0002-postgresql-postgis-over-cosmos-db.md b/Docs/ADR/adr-0002-postgresql-postgis-over-cosmos-db.md
+index 0b9bed9..dc7718a 100644
+--- a/Docs/ADR/adr-0002-postgresql-postgis-over-cosmos-db.md
++++ b/Docs/ADR/adr-0002-postgresql-postgis-over-cosmos-db.md
+@@ -58,6 +58,6 @@ Use Azure Database for PostgreSQL Flexible Server with the PostGIS extension as
+ 
+ ## References
+ 
+-- **REF-001**: [Product and Data Brief, architecture section](../ASOT/RigRoom-Product-and-Data-Brief.md)
+-- **REF-002**: [PRD, Platform decisions](../ASOT/RigRoom-PRD.md#platform-decisions)
+-- **REF-003**: [Implementation Plan, Data pipeline build order](../ASOT/RigRoom-Implementation-Plan.md#data-pipeline-build-order)
++- **REF-001**: [Product and Data Brief, architecture section](../ASOT/Plover-Product-and-Data-Brief.md)
++- **REF-002**: [PRD, Platform decisions](../ASOT/Plover-PRD.md#platform-decisions)
++- **REF-003**: [Implementation Plan, Data pipeline build order](../ASOT/Plover-Implementation-Plan.md#data-pipeline-build-order)
+diff --git a/Docs/ADR/adr-0003-valhalla-truck-routing.md b/Docs/ADR/adr-0003-valhalla-truck-routing.md
+index 1b80b25..439ea67 100644
+--- a/Docs/ADR/adr-0003-valhalla-truck-routing.md
++++ b/Docs/ADR/adr-0003-valhalla-truck-routing.md
+@@ -57,6 +57,6 @@ Run Valhalla in a container on Azure Container Apps, using truck costing paramet
+ 
+ ## References
+ 
+-- **REF-001**: [PRD, FR-03](../ASOT/RigRoom-PRD.md#functional-requirements)
+-- **REF-002**: [Implementation Plan, Risks, spikes and fallbacks](../ASOT/RigRoom-Implementation-Plan.md#risks-spikes-and-fallbacks)
++- **REF-001**: [PRD, FR-03](../ASOT/Plover-PRD.md#functional-requirements)
++- **REF-002**: [Implementation Plan, Risks, spikes and fallbacks](../ASOT/Plover-Implementation-Plan.md#risks-spikes-and-fallbacks)
+ - **REF-003**: [ADR-0005: Azure Container Apps hosting](adr-0005-azure-container-apps-hosting.md)
+diff --git a/Docs/ADR/adr-0004-auth0-identity-provider.md b/Docs/ADR/adr-0004-auth0-identity-provider.md
+index c8daf6f..347724d 100644
+--- a/Docs/ADR/adr-0004-auth0-identity-provider.md
++++ b/Docs/ADR/adr-0004-auth0-identity-provider.md
+@@ -58,6 +58,6 @@ Use Auth0 as the single IdP for the MAUI app, the Blazor WASM admin app, and the
+ 
+ ## References
+ 
+-- **REF-001**: [PRD, FR-02](../ASOT/RigRoom-PRD.md#functional-requirements)
+-- **REF-002**: [Implementation Plan, Assumptions and defaults](../ASOT/RigRoom-Implementation-Plan.md#assumptions-and-defaults)
++- **REF-001**: [PRD, FR-02](../ASOT/Plover-PRD.md#functional-requirements)
++- **REF-002**: [Implementation Plan, Assumptions and defaults](../ASOT/Plover-Implementation-Plan.md#assumptions-and-defaults)
+ - **REF-003**: [ADR-0001: Native .NET MAUI mobile app](adr-0001-native-maui-mobile-app.md)
+diff --git a/Docs/ADR/adr-0005-azure-container-apps-hosting.md b/Docs/ADR/adr-0005-azure-container-apps-hosting.md
+index df780bb..7d38b50 100644
+--- a/Docs/ADR/adr-0005-azure-container-apps-hosting.md
++++ b/Docs/ADR/adr-0005-azure-container-apps-hosting.md
+@@ -63,6 +63,6 @@ Run all server components as containers in one Azure Container Apps environment
+ 
+ ## References
+ 
+-- **REF-001**: [PRD, Platform decisions](../ASOT/RigRoom-PRD.md#platform-decisions)
+-- **REF-002**: [Implementation Plan, Infrastructure and CI/CD](../ASOT/RigRoom-Implementation-Plan.md#infrastructure-and-cicd)
++- **REF-001**: [PRD, Platform decisions](../ASOT/Plover-PRD.md#platform-decisions)
++- **REF-002**: [Implementation Plan, Infrastructure and CI/CD](../ASOT/Plover-Implementation-Plan.md#infrastructure-and-cicd)
+ - **REF-003**: [ADR-0003: Self-hosted Valhalla](adr-0003-valhalla-truck-routing.md)
+diff --git a/Docs/ADR/adr-0006-stripe-web-checkout.md b/Docs/ADR/adr-0006-stripe-web-checkout.md
+index b8d5549..685b91b 100644
+--- a/Docs/ADR/adr-0006-stripe-web-checkout.md
++++ b/Docs/ADR/adr-0006-stripe-web-checkout.md
+@@ -57,6 +57,6 @@ Sell subscriptions through Stripe web checkout, linked from the app for US users
+ 
+ ## References
+ 
+-- **REF-001**: [PRD, Monetization](../ASOT/RigRoom-PRD.md#monetization)
+-- **REF-002**: [Implementation Plan, R1 Beta plan](../ASOT/RigRoom-Implementation-Plan.md#r1-beta-plan)
++- **REF-001**: [PRD, Monetization](../ASOT/Plover-PRD.md#monetization)
++- **REF-002**: [Implementation Plan, R1 Beta plan](../ASOT/Plover-Implementation-Plan.md#r1-beta-plan)
+ - **REF-003**: [ADR-0004: Auth0 as the identity provider](adr-0004-auth0-identity-provider.md)
+diff --git a/Docs/ASOT/RigRoom-Implementation-Plan.md b/Docs/ASOT/Plover-Implementation-Plan.md
+similarity index 88%
+rename from Docs/ASOT/RigRoom-Implementation-Plan.md
+rename to Docs/ASOT/Plover-Implementation-Plan.md
+index 4d4592d..3a54dd3 100644
+--- a/Docs/ASOT/RigRoom-Implementation-Plan.md
++++ b/Docs/ASOT/Plover-Implementation-Plan.md
+@@ -1,4 +1,4 @@
+-# RigRoom — Implementation Plan
++# Plover — Implementation Plan
+ 
+ Oct 6, 2026 · @Mark
+ 
+@@ -38,15 +38,15 @@ The plan picks a working default for each open question that blocks R0, so work
+ One monorepo holds the .NET solution, the Python pipeline, dbt, and Bicep, so Claude Code sees the whole system and one PR can change a contract and both its producer and consumer.
+ 
+ ```text
+-rigroom/
++plover/
+   src/
+-    RigRoom.Domain/        rig profile, rig-fit rule, confidence labels, linear referencing (NTS)
+-    RigRoom.Contracts/     DTOs + validation shared by API, MAUI, Blazor
+-    RigRoom.ApiClient/     typed HTTP client, offline outbox interfaces
+-    RigRoom.Data/          EF Core + NetTopologySuite, migrations
+-    RigRoom.Api/           minimal APIs, route groups per feature
+-    RigRoom.Mobile/        .NET MAUI, XAML + CommunityToolkit.Mvvm, Mapsui
+-    RigRoom.Web/           Blazor WASM: trip planner + admin queue, MapLibre via JS interop
++    Plover.Domain/        rig profile, rig-fit rule, confidence labels, linear referencing (NTS)
++    Plover.Contracts/     DTOs + validation shared by API, MAUI, Blazor
++    Plover.ApiClient/     typed HTTP client, offline outbox interfaces
++    Plover.Data/          EF Core + NetTopologySuite, migrations
++    Plover.Api/           minimal APIs, route groups per feature
++    Plover.Mobile/        .NET MAUI, XAML + CommunityToolkit.Mvvm, Mapsui
++    Plover.Web/           Blazor WASM: trip planner + admin queue, MapLibre via JS interop
+   pipeline/
+     ingest/               Python: HPMS, NTAD, state DOT layers -> evidence
+     candidates/           Python: corridor buffers, lay-bys, wide shoulders
+@@ -179,23 +179,7 @@ The R0 gate is measured only on holdout sites the classifier never saw during tu
+ 
+ ## Spend schedule
+ 
+-No large purchase happens before the step that justifies it: R0 spends about $2–3K, and the R1 Cracker Barrel spend waits for the R0 gate. Figures come from the brief's budget unless marked approximate.
+-
+-| When | Milestone | Item | Cost |
+-| --- | --- | --- | --- |
+-| Oct 2026 | M0 | Apple Developer Program, Google Play registration | about $99/yr + $25 once (approximate) |
+-| Oct 2026 onward | M0 | Azure hosting, dev + prod | $50–100/month |
+-| Nov–Dec 2026 | M2 | AI processing for pilot corridors | ~$200 |
+-| Dec 2026 | M2 | SkyWatch 30 cm strips around NAIP candidates, after license check | ~$600 |
+-| Mar–Apr 2027 | M6 | Field verification of 100–200 pilot sites (tester bounties) | ~$1–2K |
+-| Apr 2027 | Before R1 | Legal review of terms, wording, data licenses | ~$2–5K |
+-| May 2027 | R1-a | Cracker Barrel store list | $85 + quarterly refresh |
+-| May–Jun 2027 | R1-a | Imagery for ~658 lots | ~$12.5K |
+-| Jun–Aug 2027 | R1-a | AI processing, national | ~$2K |
+-| Jun–Sep 2027 | R1 | Verification bounties, about 2,000 sites | ~$10–20K |
+-| From Sep 2027 | R1 | Azure hosting with staging and Front Door | $150–300/month |
+-
+-The $10–20K bounty line is the largest discretionary cost. It can be phased by state after launch rather than paid up front, since the PRD places the verifier program itself in R2.
++Moved to the private ADS repo: `ADS/products/plover/money/Plover_Money.md`. Its rule still governs build order: no large purchase happens before the milestone that justifies it.
+ 
+ ## Risks, spikes and fallbacks
+ 
+@@ -213,7 +197,7 @@ Each risk below has a test that answers it and a date by which the fallback is c
+ 
+ ## Decisions and first-week actions
+ 
+-Only two decisions block R0 work this month: which Utah corridors, and whether a November field trip is possible. Everything else can wait for its milestone.
++Only two decisions block R0 work this month: which Utah corridors, and whether a November field trip is possible. Everything else can wait for its milestone. Business decisions (free tier, brand, price point, IAP at launch, verifier payments) are in `ADS/products/plover/planning/Plover_Business_Plan.md`.
+ 
+ | Decision | Needed by | Default if undecided |
+ | --- | --- | --- |
+@@ -221,12 +205,7 @@ Only two decisions block R0 work this month: which Utah corridors, and whether a
+ | November US-50 ground-truth trip | Nov 1, 2026 | Spring trip; gate moves about 4 weeks later |
+ | Physical-fit rollup rule and length buckets | Nov 15, 2026 | Minimum across attributes; buckets above |
+ | SkyWatch strip pricing and derived-data license | Dec 1, 2026 | NAIP-only for pilot |
+-| Free tier boundary (one free corridor?) | Mar 2027 | Downloads paid-only |
+-| Standalone app or merged with 360° video brand | Apr 2027 | Standalone |
+-| Price point from RV group survey | Apr 2027 | $30/year |
+ | Store-list source (ScrapeHero vs Overture/OSM brand tags) | May 2027 | ScrapeHero, if license allows |
+-| IAP at launch | Jul 2027 | Stripe only |
+-| Verifier payment rails and tax reporting | R2 planning | — |
+ 
+ First week, Oct 12–18:
+ 
+diff --git a/Docs/ASOT/RigRoom-PRD.md b/Docs/ASOT/Plover-PRD.md
+similarity index 93%
+rename from Docs/ASOT/RigRoom-PRD.md
+rename to Docs/ASOT/Plover-PRD.md
+index 23acfb3..d4eb503 100644
+--- a/Docs/ASOT/RigRoom-PRD.md
++++ b/Docs/ASOT/Plover-PRD.md
+@@ -1,4 +1,4 @@
+-# RigRoom — PRD
++# Plover — PRD
+ 
+ Oct 6, 2026 · @Mark
+ 
+@@ -154,19 +154,10 @@ The data model, sources, scoring formula, and AI pipeline are defined in the pro
+ 
+ ## Monetization
+ 
+-A free tier drives check-ins; a paid annual plan at about $30 unlocks offline packs and alerts. The price is a hypothesis to test before R1.
+-
+-| Plan | Price | Includes |
+-| --- | --- | --- |
+-| Free | $0 | Route planning, stops along route online, site detail, check-ins |
+-| Pro | ~$30/year (test $25–40) | Corridor downloads, offline drive mode, background next-stop alerts, web planner |
+-| Verifier | Paid per verified site | Verification tasks and payouts (R2) |
+-| Data license | Negotiated | Licensed export or API for navigation apps and rental fleets (R3) |
++Plans, prices and comparables are business documents and live in the private ADS repo: `ADS/products/plover/money/Plover_Money.md`.
+ 
+ **Billing.** Stripe web checkout, linked from the app for US users, with entitlements synced through the API. Apple's commission on link-out purchases is unsettled: none is collected today, Apple has proposed 5–15%, and a Supreme Court ruling is expected by June 2027. Keep in-app purchase as a fallback.
+ 
+-**Comparables.** RV LIFE Pro is $65/year and Campendium RV PRO has sold for $30–42/year on promotion; both bundle routing and campgrounds, so this app is priced as an add-on.
+-
+ ## Success metrics
+ 
+ Each release has one gate metric; the targets are proposals to firm up once R0 data exists.
+@@ -195,20 +186,18 @@ The two biggest risks are whether RVers pay for this as a standalone app and whe
+ 
+ ## Open questions
+ 
+-- [x] Product name and brand: **RigRoom**, which avoids "big-rig" so owners of smaller rigs see the app as theirs.
+-- [ ] Standalone, or combined with the 360° site video idea under one brand?
+-- [ ] Free tier boundary: are corridor downloads paid-only, or is one free corridor allowed?
++Business questions (name and brand, free tier boundary, verifier payouts) are in `ADS/products/plover/planning/Plover_Business_Plan.md`.
++
+ - [ ] Rig-fit margin: is 10 ft beyond rig length right, and should users adjust it?
+ - [ ] How "no trucks" roads are treated for RVs in Valhalla (penalty value, state rules).
+ - [ ] Which two Utah corridors join US-50 for R0?
+ - [ ] Does SkyWatch price narrow strips by exact polygon or enforce a minimum width?
+ - [ ] Store-list source: ScrapeHero license terms, or Overture/OSM brand tags?
+-- [ ] Verifier payouts: payment rails, tax reporting, and vetting.
+ - [ ] Minimum iOS and Android versions for .NET 10 MAUI.
+ 
+ ## References
+ 
+-- RigRoom — Product & Data Brief: data sources, scoring model, AI pipeline, architecture, and budget
++- Plover — Product & Data Brief: data sources, scoring model, AI pipeline, architecture, and budget
+ - [RVIA 2025 RV Owner Demographic Profile summary](https://camperfaqs.com/rv-statistics-trends-facts): 8.1M RV households and ownership by RV type
+ - [RV LIFE Pro pricing](https://support.rvlife.com/hc/en-us/articles/16298434564247-What-is-the-price-for-the-RV-LIFE-Pro-subscription)
+ - [Campendium RV PRO promotion](https://campendium.com/laborday2026/)
+diff --git a/Docs/ASOT/RigRoom-Product-and-Data-Brief.md b/Docs/ASOT/Plover-Product-and-Data-Brief.md
+similarity index 81%
+rename from Docs/ASOT/RigRoom-Product-and-Data-Brief.md
+rename to Docs/ASOT/Plover-Product-and-Data-Brief.md
+index 9e7d45e..9588895 100644
+--- a/Docs/ASOT/RigRoom-Product-and-Data-Brief.md
++++ b/Docs/ASOT/Plover-Product-and-Data-Brief.md
+@@ -1,4 +1,4 @@
+-# RigRoom — Product & Data Brief
++# Plover — Product & Data Brief
+ 
+ Oct 6, 2026 · @Mark
+ 
+@@ -20,15 +20,7 @@ On desolate routes like US-50 from Reno to Ely, NV, a big rig often passes a pul
+ 
+ ## Competitive landscape
+ 
+-No product maps informal pullouts at big-rig detail (surface, length, distance off the travel lane, re-entry visibility), ordered along a route and available offline. RVers currently combine several apps to get partway there.
+-
+-| Product | What it does | Gap for this use |
+-| --- | --- | --- |
+-| [iOverlander](https://app.ioverlander.com) | User-posted camp spots, including some roadside pullouts | Camping focus, free-text notes, not ordered along a route, no rig-size filters |
+-| [Trucker Path](https://truckerpath.com) | Crowdsourced truck stops, rest areas, parking availability | Formal stops only; the crowd model to copy |
+-| RV LIFE / Trip Wizard, CoPilot RV, [EZRV](https://apps.apple.com/app/id6791214932) | Routing by rig dimensions, campgrounds, fuel stops | No turnout layer |
+-| [Low Clearance Map](https://lowclearancemap.com/) | Subscription bridge-clearance dataset and navigation | Not a competitor; proof RVers pay for one narrow verified dataset |
+-| Campendium, The Dyrt, Roadtrippers | Reviews of campgrounds and overnight lots, incl. Cracker Barrel | Reviews, not measured site geometry or approach scoring |
++Moved to the private ADS repo: `ADS/products/plover/marketing/Plover_Competitive_Landscape.md`.
+ 
+ ## Core data model
+ 
+@@ -124,14 +116,7 @@ Verified field data is the part of the dataset nobody can download for free, so
+ 
+ ## Licensing and legal constraints
+ 
+-Resale value depends on owning clean rights to every record in the export, so license tracking is built into the data model from day one. Have a lawyer review this before selling anything.
+-
+-- **Share-alike sources stay out of resale exports.** OSM (ODbL) and Mapillary (CC BY-SA) can inform the app, but records derived from them are flagged and excluded from licensed datasets.
+-- **Commercial imagery.** Confirm the SkyWatch provider license allows publishing and reselling vector data derived from the imagery. Redistributing the imagery itself is usually restricted.
+-- **No Google content.** Google Maps terms forbid digitizing features from its satellite imagery and using its content for AI training or testing.
+-- **Store lists.** ScrapeHero data is sourced from brand store locators; confirm its license permits use in a commercial app and derived products.
+-- **Liability.** Show conditions as user- and data-reported, never as a guarantee a rig will fit or that parking is permitted. Signage and posted limits always win.
+-- **User content.** Terms grant resale rights to check-ins and photos; strip faces and plates from published photos.
++The legal requirements on data sources (share-alike exclusion, commercial imagery rights, no Google content, store-list licensing, liability wording, rights to user content) live in the private ADS repo: `ADS/products/plover/legal/Plover_Data_Licensing.md`. What this repo must implement is in the data model above: every record keeps its source license, and share-alike records never enter the licensing export.
+ 
+ ## Recommended tech stack
+ 
+@@ -158,19 +143,7 @@ The pipeline writes evidence and scores to PostGIS. The API serves routes and si
+ 
+ ## Budget estimates
+ 
+-A corridor pilot costs about $2–3K in data and services; a national Cracker Barrel launch about $27–40K. Imagery figures use SkyWatch's $19/km² archive rate; the rest are estimates to firm up with quotes.
+-
+-| Item | Pilot (US-50 + 2 Utah corridors) | National Cracker Barrel launch |
+-| --- | --- | --- |
+-| Store location lists | $85 | $85 + quarterly refresh |
+-| Commercial imagery | ~$600 (US-50: ~515 km × 60 m strip ≈ 31 km²) | ~$12.5K (658 lots × 1 km²) |
+-| Paid verification bounties | ~$1–2K (100–200 sites) | ~$10–20K (2,000 sites) |
+-| AI processing | ~$200 | ~$2K |
+-| Legal review | defer | ~$2–5K |
+-| Azure hosting | ~$50–100/month | ~$150–300/month |
+-| **Total (one-time)** | **~$2–3K** | **~$27–40K** |
+-
+-Azure hosting and AI processing figures are rough estimates, not quotes.
++Moved to the private ADS repo: `ADS/products/plover/money/Plover_Money.md`.
+ 
+ ## Phased rollout
+ 
+@@ -178,19 +151,15 @@ Four phases, each gated on proof from the one before: the pilot proves the AI, C
+ 
+ [embedded content: rollout · 4 phases, 3 gates]
+ 
+-Dates and team capacity belong in the implementation plan; budget figures match the estimates above.
++Dates and team capacity belong in the implementation plan; budget figures are in `ADS/products/plover/money/Plover_Money.md`.
+ 
+ ## Open decisions
+ 
+-These need answers before or during the implementation plan.
++These need answers before or during the implementation plan. Business decisions (brand, launch wedge, revenue model, bounty mechanics) are in `ADS/products/plover/planning/Plover_Business_Plan.md`.
+ 
+-- [ ] Standalone app, or merged with the big-rig 360° site video idea under one brand?
+-- [ ] Launch wedge: Cracker Barrel lots first, or desolate-corridor pullouts first?
+-- [ ] Revenue model: consumer subscription, data licensing (B2B), or both from the start?
+ - [ ] Which pilot corridors besides US-50 (e.g. I-80 and I-15 in Utah and Nevada)? Confirm whether SkyWatch prices narrow strips by exact polygon or enforces a minimum strip width.
+ - [ ] Imagery classifier approach: vision LLM on tiles, or a trained segmentation model, or LLM first then train on labels?
+ - [ ] Routing engine: self-hosted Valhalla, or Azure Maps truck routing?
+-- [ ] Bounty program mechanics: payment rails, verifier vetting, fraud checks.
+ - [ ] Store lists: confirm ScrapeHero license terms or source from Overture/OSM brand tags.
+ 
+ ## Sources
+diff --git a/Plover.NoMobile.slnf b/Plover.NoMobile.slnf
+new file mode 100644
+index 0000000..3a7be73
+--- /dev/null
++++ b/Plover.NoMobile.slnf
+@@ -0,0 +1,14 @@
++{
++  "solution": {
++    "path": "Plover.slnx",
++    "projects": [
++      "src/Plover.Domain/Plover.Domain.csproj",
++      "src/Plover.Contracts/Plover.Contracts.csproj",
++      "src/Plover.ApiClient/Plover.ApiClient.csproj",
++      "src/Plover.Data/Plover.Data.csproj",
++      "src/Plover.Api/Plover.Api.csproj",
++      "src/Plover.Web/Plover.Web.csproj",
++      "tests/Plover.Domain.Tests/Plover.Domain.Tests.csproj"
++    ]
++  }
++}
+diff --git a/Plover.slnx b/Plover.slnx
+new file mode 100644
+index 0000000..ae7297e
+--- /dev/null
++++ b/Plover.slnx
+@@ -0,0 +1,14 @@
++<Solution>
++  <Folder Name="/src/">
++    <Project Path="src/Plover.Domain/Plover.Domain.csproj" />
++    <Project Path="src/Plover.Contracts/Plover.Contracts.csproj" />
++    <Project Path="src/Plover.ApiClient/Plover.ApiClient.csproj" />
++    <Project Path="src/Plover.Data/Plover.Data.csproj" />
++    <Project Path="src/Plover.Api/Plover.Api.csproj" />
++    <Project Path="src/Plover.Mobile/Plover.Mobile.csproj" />
++    <Project Path="src/Plover.Web/Plover.Web.csproj" />
++  </Folder>
++  <Folder Name="/tests/">
++    <Project Path="tests/Plover.Domain.Tests/Plover.Domain.Tests.csproj" />
++  </Folder>
++</Solution>
+diff --git a/RigRoom.NoMobile.slnf b/RigRoom.NoMobile.slnf
+deleted file mode 100644
+index 74bb69e..0000000
+--- a/RigRoom.NoMobile.slnf
++++ /dev/null
+@@ -1,14 +0,0 @@
+-{
+-  "solution": {
+-    "path": "RigRoom.slnx",
+-    "projects": [
+-      "src/RigRoom.Domain/RigRoom.Domain.csproj",
+-      "src/RigRoom.Contracts/RigRoom.Contracts.csproj",
+-      "src/RigRoom.ApiClient/RigRoom.ApiClient.csproj",
+-      "src/RigRoom.Data/RigRoom.Data.csproj",
+-      "src/RigRoom.Api/RigRoom.Api.csproj",
+-      "src/RigRoom.Web/RigRoom.Web.csproj",
+-      "tests/RigRoom.Domain.Tests/RigRoom.Domain.Tests.csproj"
+-    ]
+-  }
+-}
+diff --git a/RigRoom.slnx b/RigRoom.slnx
+deleted file mode 100644
+index 066527a..0000000
+--- a/RigRoom.slnx
++++ /dev/null
+@@ -1,14 +0,0 @@
+-<Solution>
+-  <Folder Name="/src/">
+-    <Project Path="src/RigRoom.Domain/RigRoom.Domain.csproj" />
+-    <Project Path="src/RigRoom.Contracts/RigRoom.Contracts.csproj" />
+-    <Project Path="src/RigRoom.ApiClient/RigRoom.ApiClient.csproj" />
+-    <Project Path="src/RigRoom.Data/RigRoom.Data.csproj" />
+-    <Project Path="src/RigRoom.Api/RigRoom.Api.csproj" />
+-    <Project Path="src/RigRoom.Mobile/RigRoom.Mobile.csproj" />
+-    <Project Path="src/RigRoom.Web/RigRoom.Web.csproj" />
+-  </Folder>
+-  <Folder Name="/tests/">
+-    <Project Path="tests/RigRoom.Domain.Tests/RigRoom.Domain.Tests.csproj" />
+-  </Folder>
+-</Solution>
+diff --git a/infra/README.md b/infra/README.md
+index 38d814f..035c583 100644
+--- a/infra/README.md
++++ b/infra/README.md
+@@ -2,13 +2,13 @@
+ 
+ Bicep modules and per-environment parameter files for every Azure resource. This folder is the source of truth for Azure configuration: nothing is created by hand in the portal, and GitHub Actions deploys it.
+ 
+-R0 runs two environments, `dev` and `prod`. The resource list and R1 changes are in the [Implementation Plan](../Docs/ASOT/RigRoom-Implementation-Plan.md#infrastructure-and-cicd). The hosting choice is recorded in [ADR-0005](../Docs/ADR/adr-0005-azure-container-apps-hosting.md).
++R0 runs two environments, `dev` and `prod`. The resource list and R1 changes are in the [Implementation Plan](../Docs/ASOT/Plover-Implementation-Plan.md#infrastructure-and-cicd). The hosting choice is recorded in [ADR-0005](../Docs/ADR/adr-0005-azure-container-apps-hosting.md).
+ 
+ ## Layout
+ 
+ | Path | Contents |
+ | --- | --- |
+-| `main.bicep` | Subscription-scope entry point. Creates `rg-rigroom-{env}` and calls every module, so a fresh subscription needs nothing created first. |
++| `main.bicep` | Subscription-scope entry point. Creates `rg-plover-{env}` and calls every module, so a fresh subscription needs nothing created first. |
+ | `types.bicep` | Shared parameter types. |
+ | `env/{env}.bicepparam` | One parameter file per environment. A new environment (staging in R1) is one new file plus an entry in `environmentName`'s allowed list. |
+ | `modules/identity.bicep` | User-assigned managed identities: `app` (API and jobs) and `migrator` (EF migrations, PostgreSQL Entra admin). |
+@@ -16,7 +16,7 @@ R0 runs two environments, `dev` and `prod`. The resource list and R1 changes are
+ | `modules/registry.bicep` | Container Registry, Basic, admin user off, `AcrPull` for both identities. |
+ | `modules/keyvault.bicep` | Key Vault with RBAC authorization, `Key Vault Secrets User` for both identities. |
+ | `modules/storage.bicep` | Storage account with private Blob containers `packs`, `imagery`, `photos` and the `valhalla-tiles` Azure Files share. The app identity gets `Storage Blob Data Contributor` and `Storage Blob Delegator` (to sign user delegation SAS). |
+-| `modules/postgres.bicep` | PostgreSQL Flexible Server, Burstable `Standard_B1ms`, `POSTGIS` allow-listed in `azure.extensions`, Entra-only auth, database `rigroom`. |
++| `modules/postgres.bicep` | PostgreSQL Flexible Server, Burstable `Standard_B1ms`, `POSTGIS` allow-listed in `azure.extensions`, Entra-only auth, database `plover`. |
+ | `modules/container-apps-environment.bicep` | Container Apps environment (Consumption workload profile) logging to Log Analytics. Apps and jobs are added by later milestones. |
+ 
+ Globally unique names (registry, Key Vault, storage, PostgreSQL) carry a six-character suffix derived from the subscription and environment, so they are stable across redeploys.
+@@ -36,8 +36,8 @@ cd infra
+ bicep lint main.bicep
+ bicep build-params env/dev.bicepparam --stdout > /dev/null
+ 
+-az deployment sub what-if --location westus3 --name rigroom-dev --parameters env/dev.bicepparam
+-az deployment sub create  --location westus3 --name rigroom-dev --parameters env/dev.bicepparam
++az deployment sub what-if --location westus3 --name plover-dev --parameters env/dev.bicepparam
++az deployment sub create  --location westus3 --name plover-dev --parameters env/dev.bicepparam
+ ```
+ 
+ What-if reports every resource as `Create` on a fresh subscription except one `Unsupported` entry: the PostgreSQL Entra administrator. Its resource name must be the migrator's object id, which does not exist until deployment, so what-if cannot preview it. That entry is expected.
+diff --git a/infra/main.bicep b/infra/main.bicep
+index a716307..9d5b4ef 100644
+--- a/infra/main.bicep
++++ b/infra/main.bicep
+@@ -1,4 +1,4 @@
+-// RigRoom: one Azure environment (dev, prod, later staging).
++// Plover: one Azure environment (dev, prod, later staging).
+ // Deployed at subscription scope so a fresh subscription needs nothing created by hand:
+ // the resource group is part of the template. Each environment is one .bicepparam file in env/.
+ targetScope = 'subscription'
+@@ -17,7 +17,7 @@ param location string
+ 
+ @description('Short workload name used as the resource name stem.')
+ @maxLength(8)
+-param workloadName string = 'rigroom'
++param workloadName string = 'plover'
+ 
+ @description('PostgreSQL major version.')
+ param postgresVersion string = '17'
+diff --git a/pipeline/README.md b/pipeline/README.md
+index 318fb82..1f46bf0 100644
+--- a/pipeline/README.md
++++ b/pipeline/README.md
+@@ -11,6 +11,6 @@ Python jobs and dbt models that turn public data, imagery, and field reports int
+ | `packs/` | Planetiler basemap pack plus SQLite site pack per corridor | Blob Storage |
+ | `dbt/` | `evidence` to attribute values to scores | `score` |
+ 
+-Build order, stage contracts, and the scoring formula are in the [Implementation Plan](../Docs/ASOT/RigRoom-Implementation-Plan.md#data-pipeline-build-order). dbt naming rules are in [CLAUDE.md](../CLAUDE.md#dbt-conventions).
++Build order, stage contracts, and the scoring formula are in the [Implementation Plan](../Docs/ASOT/Plover-Implementation-Plan.md#data-pipeline-build-order). dbt naming rules are in [CLAUDE.md](../CLAUDE.md#dbt-conventions).
+ 
+ **Never write OSM-derived (share-alike) data into resale tables.** Every row keeps the license of its `source`.
+diff --git a/src/Plover.Api/Plover.Api.csproj b/src/Plover.Api/Plover.Api.csproj
+new file mode 100644
+index 0000000..ff5b458
+--- /dev/null
++++ b/src/Plover.Api/Plover.Api.csproj
+@@ -0,0 +1,17 @@
++<Project Sdk="Microsoft.NET.Sdk.Web">
++
++  <PropertyGroup>
++    <TargetFramework>net10.0</TargetFramework>
++  </PropertyGroup>
++
++  <ItemGroup>
++    <InternalsVisibleTo Include="Plover.Api.Tests" />
++  </ItemGroup>
++
++  <ItemGroup>
++    <ProjectReference Include="..\Plover.Domain\Plover.Domain.csproj" />
++    <ProjectReference Include="..\Plover.Contracts\Plover.Contracts.csproj" />
++    <ProjectReference Include="..\Plover.Data\Plover.Data.csproj" />
++  </ItemGroup>
++
++</Project>
+diff --git a/src/RigRoom.Api/Program.cs b/src/Plover.Api/Program.cs
+similarity index 100%
+rename from src/RigRoom.Api/Program.cs
+rename to src/Plover.Api/Program.cs
+diff --git a/src/RigRoom.Api/Properties/launchSettings.json b/src/Plover.Api/Properties/launchSettings.json
+similarity index 100%
+rename from src/RigRoom.Api/Properties/launchSettings.json
+rename to src/Plover.Api/Properties/launchSettings.json
+diff --git a/src/RigRoom.Api/appsettings.json b/src/Plover.Api/appsettings.json
+similarity index 100%
+rename from src/RigRoom.Api/appsettings.json
+rename to src/Plover.Api/appsettings.json
+diff --git a/src/RigRoom.ApiClient/RigRoom.ApiClient.csproj b/src/Plover.ApiClient/Plover.ApiClient.csproj
+similarity index 66%
+rename from src/RigRoom.ApiClient/RigRoom.ApiClient.csproj
+rename to src/Plover.ApiClient/Plover.ApiClient.csproj
+index a14f2a8..24e0207 100644
+--- a/src/RigRoom.ApiClient/RigRoom.ApiClient.csproj
++++ b/src/Plover.ApiClient/Plover.ApiClient.csproj
+@@ -5,7 +5,7 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <ProjectReference Include="..\RigRoom.Contracts\RigRoom.Contracts.csproj" />
++    <ProjectReference Include="..\Plover.Contracts\Plover.Contracts.csproj" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/RigRoom.Contracts/RigRoom.Contracts.csproj b/src/Plover.Contracts/Plover.Contracts.csproj
+similarity index 100%
+rename from src/RigRoom.Contracts/RigRoom.Contracts.csproj
+rename to src/Plover.Contracts/Plover.Contracts.csproj
+diff --git a/src/RigRoom.Data/RigRoom.Data.csproj b/src/Plover.Data/Plover.Data.csproj
+similarity index 68%
+rename from src/RigRoom.Data/RigRoom.Data.csproj
+rename to src/Plover.Data/Plover.Data.csproj
+index e63866e..56393c3 100644
+--- a/src/RigRoom.Data/RigRoom.Data.csproj
++++ b/src/Plover.Data/Plover.Data.csproj
+@@ -5,7 +5,7 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <ProjectReference Include="..\RigRoom.Domain\RigRoom.Domain.csproj" />
++    <ProjectReference Include="..\Plover.Domain\Plover.Domain.csproj" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/RigRoom.Domain/RigRoom.Domain.csproj b/src/Plover.Domain/Plover.Domain.csproj
+similarity index 100%
+rename from src/RigRoom.Domain/RigRoom.Domain.csproj
+rename to src/Plover.Domain/Plover.Domain.csproj
+diff --git a/src/RigRoom.Mobile/App.xaml b/src/Plover.Mobile/App.xaml
+similarity index 83%
+rename from src/RigRoom.Mobile/App.xaml
+rename to src/Plover.Mobile/App.xaml
+index fd496f3..f8ee939 100644
+--- a/src/RigRoom.Mobile/App.xaml
++++ b/src/Plover.Mobile/App.xaml
+@@ -1,8 +1,8 @@
+ <?xml version = "1.0" encoding = "UTF-8" ?>
+ <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+-             xmlns:local="clr-namespace:RigRoom.Mobile"
+-             x:Class="RigRoom.Mobile.App">
++             xmlns:local="clr-namespace:Plover.Mobile"
++             x:Class="Plover.Mobile.App">
+     <Application.Resources>
+         <ResourceDictionary>
+             <ResourceDictionary.MergedDictionaries>
+diff --git a/src/RigRoom.Mobile/App.xaml.cs b/src/Plover.Mobile/App.xaml.cs
+similarity index 85%
+rename from src/RigRoom.Mobile/App.xaml.cs
+rename to src/Plover.Mobile/App.xaml.cs
+index 4365859..5d76df8 100644
+--- a/src/RigRoom.Mobile/App.xaml.cs
++++ b/src/Plover.Mobile/App.xaml.cs
+@@ -1,6 +1,6 @@
+ using Microsoft.Extensions.DependencyInjection;
+ 
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ public partial class App : Application
+ {
+diff --git a/src/RigRoom.Mobile/AppShell.xaml b/src/Plover.Mobile/AppShell.xaml
+similarity index 70%
+rename from src/RigRoom.Mobile/AppShell.xaml
+rename to src/Plover.Mobile/AppShell.xaml
+index ffa9a56..e93e7e6 100644
+--- a/src/RigRoom.Mobile/AppShell.xaml
++++ b/src/Plover.Mobile/AppShell.xaml
+@@ -1,10 +1,10 @@
+ <?xml version="1.0" encoding="UTF-8" ?>
+ <Shell
+-    x:Class="RigRoom.Mobile.AppShell"
++    x:Class="Plover.Mobile.AppShell"
+     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+-    xmlns:local="clr-namespace:RigRoom.Mobile"
+-    Title="RigRoom.Mobile">
++    xmlns:local="clr-namespace:Plover.Mobile"
++    Title="Plover.Mobile">
+ 
+     <ShellContent
+         Title="Home"
+diff --git a/src/RigRoom.Mobile/AppShell.xaml.cs b/src/Plover.Mobile/AppShell.xaml.cs
+similarity index 72%
+rename from src/RigRoom.Mobile/AppShell.xaml.cs
+rename to src/Plover.Mobile/AppShell.xaml.cs
+index ba7bcf6..8626219 100644
+--- a/src/RigRoom.Mobile/AppShell.xaml.cs
++++ b/src/Plover.Mobile/AppShell.xaml.cs
+@@ -1,4 +1,4 @@
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ public partial class AppShell : Shell
+ {
+diff --git a/src/RigRoom.Mobile/MainPage.xaml b/src/Plover.Mobile/MainPage.xaml
+similarity index 81%
+rename from src/RigRoom.Mobile/MainPage.xaml
+rename to src/Plover.Mobile/MainPage.xaml
+index 0f71189..f49f8fa 100644
+--- a/src/RigRoom.Mobile/MainPage.xaml
++++ b/src/Plover.Mobile/MainPage.xaml
+@@ -1,9 +1,9 @@
+ <?xml version="1.0" encoding="utf-8" ?>
+ <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+-             x:Class="RigRoom.Mobile.MainPage">
++             x:Class="Plover.Mobile.MainPage">
+ 
+-    <Label Text="RigRoom"
++    <Label Text="Plover"
+            Style="{StaticResource Headline}"
+            SemanticProperties.HeadingLevel="Level1"
+            VerticalOptions="Center" />
+diff --git a/src/RigRoom.Mobile/MainPage.xaml.cs b/src/Plover.Mobile/MainPage.xaml.cs
+similarity index 79%
+rename from src/RigRoom.Mobile/MainPage.xaml.cs
+rename to src/Plover.Mobile/MainPage.xaml.cs
+index d9b1156..1c63fc6 100644
+--- a/src/RigRoom.Mobile/MainPage.xaml.cs
++++ b/src/Plover.Mobile/MainPage.xaml.cs
+@@ -1,4 +1,4 @@
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ public partial class MainPage : ContentPage
+ {
+diff --git a/src/RigRoom.Mobile/MauiProgram.cs b/src/Plover.Mobile/MauiProgram.cs
+similarity index 89%
+rename from src/RigRoom.Mobile/MauiProgram.cs
+rename to src/Plover.Mobile/MauiProgram.cs
+index b54615d..efd9579 100644
+--- a/src/RigRoom.Mobile/MauiProgram.cs
++++ b/src/Plover.Mobile/MauiProgram.cs
+@@ -1,6 +1,6 @@
+ using Microsoft.Extensions.Logging;
+ 
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ public static class MauiProgram
+ {
+diff --git a/src/RigRoom.Mobile/Platforms/Android/AndroidManifest.xml b/src/Plover.Mobile/Platforms/Android/AndroidManifest.xml
+similarity index 100%
+rename from src/RigRoom.Mobile/Platforms/Android/AndroidManifest.xml
+rename to src/Plover.Mobile/Platforms/Android/AndroidManifest.xml
+diff --git a/src/RigRoom.Mobile/Platforms/Android/MainActivity.cs b/src/Plover.Mobile/Platforms/Android/MainActivity.cs
+similarity index 91%
+rename from src/RigRoom.Mobile/Platforms/Android/MainActivity.cs
+rename to src/Plover.Mobile/Platforms/Android/MainActivity.cs
+index 011877b..2eda5fd 100644
+--- a/src/RigRoom.Mobile/Platforms/Android/MainActivity.cs
++++ b/src/Plover.Mobile/Platforms/Android/MainActivity.cs
+@@ -2,7 +2,7 @@ using Android.App;
+ using Android.Content.PM;
+ using Android.OS;
+ 
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+ public class MainActivity : MauiAppCompatActivity
+diff --git a/src/RigRoom.Mobile/Platforms/Android/MainApplication.cs b/src/Plover.Mobile/Platforms/Android/MainApplication.cs
+similarity index 87%
+rename from src/RigRoom.Mobile/Platforms/Android/MainApplication.cs
+rename to src/Plover.Mobile/Platforms/Android/MainApplication.cs
+index 8030b71..65cc335 100644
+--- a/src/RigRoom.Mobile/Platforms/Android/MainApplication.cs
++++ b/src/Plover.Mobile/Platforms/Android/MainApplication.cs
+@@ -1,7 +1,7 @@
+ using Android.App;
+ using Android.Runtime;
+ 
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ [Application]
+ public class MainApplication : MauiApplication
+diff --git a/src/RigRoom.Mobile/Platforms/Android/Resources/values/colors.xml b/src/Plover.Mobile/Platforms/Android/Resources/values/colors.xml
+similarity index 100%
+rename from src/RigRoom.Mobile/Platforms/Android/Resources/values/colors.xml
+rename to src/Plover.Mobile/Platforms/Android/Resources/values/colors.xml
+diff --git a/src/RigRoom.Mobile/Platforms/iOS/AppDelegate.cs b/src/Plover.Mobile/Platforms/iOS/AppDelegate.cs
+similarity index 83%
+rename from src/RigRoom.Mobile/Platforms/iOS/AppDelegate.cs
+rename to src/Plover.Mobile/Platforms/iOS/AppDelegate.cs
+index f0c2698..0696160 100644
+--- a/src/RigRoom.Mobile/Platforms/iOS/AppDelegate.cs
++++ b/src/Plover.Mobile/Platforms/iOS/AppDelegate.cs
+@@ -1,6 +1,6 @@
+ using Foundation;
+ 
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ [Register("AppDelegate")]
+ public class AppDelegate : MauiUIApplicationDelegate
+diff --git a/src/RigRoom.Mobile/Platforms/iOS/Info.plist b/src/Plover.Mobile/Platforms/iOS/Info.plist
+similarity index 100%
+rename from src/RigRoom.Mobile/Platforms/iOS/Info.plist
+rename to src/Plover.Mobile/Platforms/iOS/Info.plist
+diff --git a/src/RigRoom.Mobile/Platforms/iOS/Program.cs b/src/Plover.Mobile/Platforms/iOS/Program.cs
+similarity index 88%
+rename from src/RigRoom.Mobile/Platforms/iOS/Program.cs
+rename to src/Plover.Mobile/Platforms/iOS/Program.cs
+index 8da5943..d1231be 100644
+--- a/src/RigRoom.Mobile/Platforms/iOS/Program.cs
++++ b/src/Plover.Mobile/Platforms/iOS/Program.cs
+@@ -1,7 +1,7 @@
+ using ObjCRuntime;
+ using UIKit;
+ 
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ public class Program
+ {
+diff --git a/src/RigRoom.Mobile/Platforms/iOS/Resources/PrivacyInfo.xcprivacy b/src/Plover.Mobile/Platforms/iOS/Resources/PrivacyInfo.xcprivacy
+similarity index 100%
+rename from src/RigRoom.Mobile/Platforms/iOS/Resources/PrivacyInfo.xcprivacy
+rename to src/Plover.Mobile/Platforms/iOS/Resources/PrivacyInfo.xcprivacy
+diff --git a/src/RigRoom.Mobile/Platforms/iOS/SceneDelegate.cs b/src/Plover.Mobile/Platforms/iOS/SceneDelegate.cs
+similarity index 74%
+rename from src/RigRoom.Mobile/Platforms/iOS/SceneDelegate.cs
+rename to src/Plover.Mobile/Platforms/iOS/SceneDelegate.cs
+index b586ca4..3fb392d 100644
+--- a/src/RigRoom.Mobile/Platforms/iOS/SceneDelegate.cs
++++ b/src/Plover.Mobile/Platforms/iOS/SceneDelegate.cs
+@@ -1,6 +1,6 @@
+ using Foundation;
+ 
+-namespace RigRoom.Mobile;
++namespace Plover.Mobile;
+ 
+ [Register("SceneDelegate")]
+ public class SceneDelegate : MauiUISceneDelegate
+diff --git a/src/RigRoom.Mobile/RigRoom.Mobile.csproj b/src/Plover.Mobile/Plover.Mobile.csproj
+similarity index 79%
+rename from src/RigRoom.Mobile/RigRoom.Mobile.csproj
+rename to src/Plover.Mobile/Plover.Mobile.csproj
+index fc62a96..6060408 100644
+--- a/src/RigRoom.Mobile/RigRoom.Mobile.csproj
++++ b/src/Plover.Mobile/Plover.Mobile.csproj
+@@ -3,21 +3,21 @@
+   <!--
+     R0 ships to iOS (TestFlight) and Android (Play internal) only; Mac Catalyst and Windows are
+     out of scope. iOS builds need macOS with a current Xcode, so Linux hosts build Android only.
+-    Requires the `maui` workload; machines without it build RigRoom.NoMobile.slnf instead.
++    Requires the `maui` workload; machines without it build Plover.NoMobile.slnf instead.
+   -->
+   <PropertyGroup>
+     <TargetFrameworks>net10.0-android</TargetFrameworks>
+     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net10.0-ios</TargetFrameworks>
+ 
+     <OutputType>Exe</OutputType>
+-    <RootNamespace>RigRoom.Mobile</RootNamespace>
++    <RootNamespace>Plover.Mobile</RootNamespace>
+     <UseMaui>true</UseMaui>
+     <SingleProject>true</SingleProject>
+     <MauiXamlInflator>SourceGen</MauiXamlInflator>
+ 
+-    <ApplicationTitle>RigRoom</ApplicationTitle>
++    <ApplicationTitle>Plover</ApplicationTitle>
+     <!-- Placeholder until the brand decision (Implementation Plan: Apr 2027). Fix before the first TestFlight upload: store IDs cannot be renamed later. -->
+-    <ApplicationId>com.rigroom.mobile</ApplicationId>
++    <ApplicationId>com.plover.mobile</ApplicationId>
+ 
+     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+     <ApplicationVersion>1</ApplicationVersion>
+@@ -40,9 +40,9 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <ProjectReference Include="..\RigRoom.Domain\RigRoom.Domain.csproj" />
+-    <ProjectReference Include="..\RigRoom.Contracts\RigRoom.Contracts.csproj" />
+-    <ProjectReference Include="..\RigRoom.ApiClient\RigRoom.ApiClient.csproj" />
++    <ProjectReference Include="..\Plover.Domain\Plover.Domain.csproj" />
++    <ProjectReference Include="..\Plover.Contracts\Plover.Contracts.csproj" />
++    <ProjectReference Include="..\Plover.ApiClient\Plover.ApiClient.csproj" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/RigRoom.Mobile/Resources/AppIcon/appicon.svg b/src/Plover.Mobile/Resources/AppIcon/appicon.svg
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/AppIcon/appicon.svg
+rename to src/Plover.Mobile/Resources/AppIcon/appicon.svg
+diff --git a/src/RigRoom.Mobile/Resources/AppIcon/appiconfg.svg b/src/Plover.Mobile/Resources/AppIcon/appiconfg.svg
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/AppIcon/appiconfg.svg
+rename to src/Plover.Mobile/Resources/AppIcon/appiconfg.svg
+diff --git a/src/RigRoom.Mobile/Resources/Fonts/OpenSans-Regular.ttf b/src/Plover.Mobile/Resources/Fonts/OpenSans-Regular.ttf
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/Fonts/OpenSans-Regular.ttf
+rename to src/Plover.Mobile/Resources/Fonts/OpenSans-Regular.ttf
+diff --git a/src/RigRoom.Mobile/Resources/Fonts/OpenSans-Semibold.ttf b/src/Plover.Mobile/Resources/Fonts/OpenSans-Semibold.ttf
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/Fonts/OpenSans-Semibold.ttf
+rename to src/Plover.Mobile/Resources/Fonts/OpenSans-Semibold.ttf
+diff --git a/src/RigRoom.Mobile/Resources/Images/.gitkeep b/src/Plover.Mobile/Resources/Images/.gitkeep
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/Images/.gitkeep
+rename to src/Plover.Mobile/Resources/Images/.gitkeep
+diff --git a/src/RigRoom.Mobile/Resources/Raw/AboutAssets.txt b/src/Plover.Mobile/Resources/Raw/AboutAssets.txt
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/Raw/AboutAssets.txt
+rename to src/Plover.Mobile/Resources/Raw/AboutAssets.txt
+diff --git a/src/RigRoom.Mobile/Resources/Splash/splash.svg b/src/Plover.Mobile/Resources/Splash/splash.svg
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/Splash/splash.svg
+rename to src/Plover.Mobile/Resources/Splash/splash.svg
+diff --git a/src/RigRoom.Mobile/Resources/Styles/Colors.xaml b/src/Plover.Mobile/Resources/Styles/Colors.xaml
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/Styles/Colors.xaml
+rename to src/Plover.Mobile/Resources/Styles/Colors.xaml
+diff --git a/src/RigRoom.Mobile/Resources/Styles/Styles.xaml b/src/Plover.Mobile/Resources/Styles/Styles.xaml
+similarity index 100%
+rename from src/RigRoom.Mobile/Resources/Styles/Styles.xaml
+rename to src/Plover.Mobile/Resources/Styles/Styles.xaml
+diff --git a/src/RigRoom.Web/App.razor b/src/Plover.Web/App.razor
+similarity index 100%
+rename from src/RigRoom.Web/App.razor
+rename to src/Plover.Web/App.razor
+diff --git a/src/RigRoom.Web/Layout/MainLayout.razor b/src/Plover.Web/Layout/MainLayout.razor
+similarity index 100%
+rename from src/RigRoom.Web/Layout/MainLayout.razor
+rename to src/Plover.Web/Layout/MainLayout.razor
+diff --git a/src/Plover.Web/Pages/Home.razor b/src/Plover.Web/Pages/Home.razor
+new file mode 100644
+index 0000000..0f4ead3
+--- /dev/null
++++ b/src/Plover.Web/Pages/Home.razor
+@@ -0,0 +1,5 @@
++@page "/"
++
++<PageTitle>Plover Admin</PageTitle>
++
++<h1>Plover Admin</h1>
+diff --git a/src/RigRoom.Web/Pages/NotFound.razor b/src/Plover.Web/Pages/NotFound.razor
+similarity index 100%
+rename from src/RigRoom.Web/Pages/NotFound.razor
+rename to src/Plover.Web/Pages/NotFound.razor
+diff --git a/src/RigRoom.Web/RigRoom.Web.csproj b/src/Plover.Web/Plover.Web.csproj
+similarity index 75%
+rename from src/RigRoom.Web/RigRoom.Web.csproj
+rename to src/Plover.Web/Plover.Web.csproj
+index 8982f5a..9867320 100644
+--- a/src/RigRoom.Web/RigRoom.Web.csproj
++++ b/src/Plover.Web/Plover.Web.csproj
+@@ -11,8 +11,8 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <ProjectReference Include="..\RigRoom.Contracts\RigRoom.Contracts.csproj" />
+-    <ProjectReference Include="..\RigRoom.ApiClient\RigRoom.ApiClient.csproj" />
++    <ProjectReference Include="..\Plover.Contracts\Plover.Contracts.csproj" />
++    <ProjectReference Include="..\Plover.ApiClient\Plover.ApiClient.csproj" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/RigRoom.Web/Program.cs b/src/Plover.Web/Program.cs
+similarity index 93%
+rename from src/RigRoom.Web/Program.cs
+rename to src/Plover.Web/Program.cs
+index 09adc4d..f5aa81b 100644
+--- a/src/RigRoom.Web/Program.cs
++++ b/src/Plover.Web/Program.cs
+@@ -1,6 +1,6 @@
+ using Microsoft.AspNetCore.Components.Web;
+ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+-using RigRoom.Web;
++using Plover.Web;
+ 
+ var builder = WebAssemblyHostBuilder.CreateDefault(args);
+ builder.RootComponents.Add<App>("#app");
+diff --git a/src/RigRoom.Web/Properties/launchSettings.json b/src/Plover.Web/Properties/launchSettings.json
+similarity index 100%
+rename from src/RigRoom.Web/Properties/launchSettings.json
+rename to src/Plover.Web/Properties/launchSettings.json
+diff --git a/src/RigRoom.Web/_Imports.razor b/src/Plover.Web/_Imports.razor
+similarity index 85%
+rename from src/RigRoom.Web/_Imports.razor
+rename to src/Plover.Web/_Imports.razor
+index 8cbf247..d5a9924 100644
+--- a/src/RigRoom.Web/_Imports.razor
++++ b/src/Plover.Web/_Imports.razor
+@@ -6,5 +6,5 @@
+ @using Microsoft.AspNetCore.Components.Web.Virtualization
+ @using Microsoft.AspNetCore.Components.WebAssembly.Http
+ @using Microsoft.JSInterop
+-@using RigRoom.Web
+-@using RigRoom.Web.Layout
++@using Plover.Web
++@using Plover.Web.Layout
+diff --git a/src/RigRoom.Web/wwwroot/css/app.css b/src/Plover.Web/wwwroot/css/app.css
+similarity index 100%
+rename from src/RigRoom.Web/wwwroot/css/app.css
+rename to src/Plover.Web/wwwroot/css/app.css
+diff --git a/src/RigRoom.Web/wwwroot/icon-192.png b/src/Plover.Web/wwwroot/icon-192.png
+similarity index 100%
+rename from src/RigRoom.Web/wwwroot/icon-192.png
+rename to src/Plover.Web/wwwroot/icon-192.png
+diff --git a/src/RigRoom.Web/wwwroot/index.html b/src/Plover.Web/wwwroot/index.html
+similarity index 87%
+rename from src/RigRoom.Web/wwwroot/index.html
+rename to src/Plover.Web/wwwroot/index.html
+index aa19c39..025289a 100644
+--- a/src/RigRoom.Web/wwwroot/index.html
++++ b/src/Plover.Web/wwwroot/index.html
+@@ -4,12 +4,12 @@
+ <head>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-    <title>RigRoom Admin</title>
++    <title>Plover Admin</title>
+     <base href="/" />
+     <link rel="preload" id="webassembly" />
+     <link rel="stylesheet" href="css/app.css" />
+     <!-- If you add any scoped CSS files, uncomment the following to load them
+-    <link href="RigRoom.Web.styles.css" rel="stylesheet" /> -->
++    <link href="Plover.Web.styles.css" rel="stylesheet" /> -->
+     <script type="importmap"></script>
+ </head>
+ 
+diff --git a/src/RigRoom.Api/RigRoom.Api.csproj b/src/RigRoom.Api/RigRoom.Api.csproj
+deleted file mode 100644
+index 8aacd50..0000000
+--- a/src/RigRoom.Api/RigRoom.Api.csproj
++++ /dev/null
+@@ -1,17 +0,0 @@
+-<Project Sdk="Microsoft.NET.Sdk.Web">
+-
+-  <PropertyGroup>
+-    <TargetFramework>net10.0</TargetFramework>
+-  </PropertyGroup>
+-
+-  <ItemGroup>
+-    <InternalsVisibleTo Include="RigRoom.Api.Tests" />
+-  </ItemGroup>
+-
+-  <ItemGroup>
+-    <ProjectReference Include="..\RigRoom.Domain\RigRoom.Domain.csproj" />
+-    <ProjectReference Include="..\RigRoom.Contracts\RigRoom.Contracts.csproj" />
+-    <ProjectReference Include="..\RigRoom.Data\RigRoom.Data.csproj" />
+-  </ItemGroup>
+-
+-</Project>
+diff --git a/src/RigRoom.Web/Pages/Home.razor b/src/RigRoom.Web/Pages/Home.razor
+deleted file mode 100644
+index f0697c2..0000000
+--- a/src/RigRoom.Web/Pages/Home.razor
++++ /dev/null
+@@ -1,5 +0,0 @@
+-@page "/"
+-
+-<PageTitle>RigRoom Admin</PageTitle>
+-
+-<h1>RigRoom Admin</h1>
+diff --git a/tests/RigRoom.Domain.Tests/DomainDependencyTests.cs b/tests/Plover.Domain.Tests/DomainDependencyTests.cs
+similarity index 67%
+rename from tests/RigRoom.Domain.Tests/DomainDependencyTests.cs
+rename to tests/Plover.Domain.Tests/DomainDependencyTests.cs
+index cede29c..8e00a29 100644
+--- a/tests/RigRoom.Domain.Tests/DomainDependencyTests.cs
++++ b/tests/Plover.Domain.Tests/DomainDependencyTests.cs
+@@ -1,10 +1,10 @@
+ using System.Reflection;
+ using AwesomeAssertions;
+ 
+-namespace RigRoom.Domain.Tests;
++namespace Plover.Domain.Tests;
+ 
+ /// <summary>
+-/// Guards the rule that RigRoom.Domain has zero infrastructure dependencies: it runs on the phone in
++/// Guards the rule that Plover.Domain has zero infrastructure dependencies: it runs on the phone in
+ /// drive mode with only NetTopologySuite and SQLite, so EF Core, ASP.NET Core, and Azure SDKs must
+ /// never leak in.
+ /// </summary>
+@@ -16,7 +16,7 @@ public sealed class DomainDependencyTests
+     public void DomainAssembly_References_ShouldOnlyIncludeBclAndNetTopologySuite()
+     {
+         // Arrange
+-        var domain = Assembly.Load(new AssemblyName("RigRoom.Domain"));
++        var domain = Assembly.Load(new AssemblyName("Plover.Domain"));
+ 
+         // Act
+         var disallowed = domain.GetReferencedAssemblies()
+@@ -25,30 +25,30 @@ public sealed class DomainDependencyTests
+             .ToList();
+ 
+         // Assert
+-        disallowed.Should().BeEmpty("RigRoom.Domain must stay free of infrastructure dependencies");
++        disallowed.Should().BeEmpty("Plover.Domain must stay free of infrastructure dependencies");
+     }
+ 
+     [Fact]
+     public void DomainProject_ProjectReferences_ShouldBeEmpty()
+     {
+         // Arrange
+-        var csproj = Path.Combine(RepoRoot(), "src", "RigRoom.Domain", "RigRoom.Domain.csproj");
++        var csproj = Path.Combine(RepoRoot(), "src", "Plover.Domain", "Plover.Domain.csproj");
+ 
+         // Act
+         var text = File.ReadAllText(csproj);
+ 
+         // Assert
+-        text.Should().NotContain("<ProjectReference", "RigRoom.Domain sits at the bottom of the dependency graph");
++        text.Should().NotContain("<ProjectReference", "Plover.Domain sits at the bottom of the dependency graph");
+     }
+ 
+     private static string RepoRoot()
+     {
+         var dir = new DirectoryInfo(AppContext.BaseDirectory);
+-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "RigRoom.slnx")))
++        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "Plover.slnx")))
+         {
+             dir = dir.Parent;
+         }
+ 
+-        return dir?.FullName ?? throw new InvalidOperationException("RigRoom.slnx not found above the test output directory.");
++        return dir?.FullName ?? throw new InvalidOperationException("Plover.slnx not found above the test output directory.");
+     }
+ }
+diff --git a/tests/RigRoom.Domain.Tests/RigRoom.Domain.Tests.csproj b/tests/Plover.Domain.Tests/Plover.Domain.Tests.csproj
+similarity index 82%
+rename from tests/RigRoom.Domain.Tests/RigRoom.Domain.Tests.csproj
+rename to tests/Plover.Domain.Tests/Plover.Domain.Tests.csproj
+index 963ef5e..7295f23 100644
+--- a/tests/RigRoom.Domain.Tests/RigRoom.Domain.Tests.csproj
++++ b/tests/Plover.Domain.Tests/Plover.Domain.Tests.csproj
+@@ -14,7 +14,7 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <ProjectReference Include="..\..\src\RigRoom.Domain\RigRoom.Domain.csproj" />
++    <ProjectReference Include="..\..\src\Plover.Domain\Plover.Domain.csproj" />
+   </ItemGroup>
+ 
+ </Project>

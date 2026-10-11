@@ -166,7 +166,7 @@ When reviewing an application or feature, proactively assess opportunities acros
 
 ### Application-Specific Patterns for This Repository
 
-RigRoom (see `Docs/ASOT/`) uses AI mainly in the offline data pipeline, not in the request path:
+Plover (see `Docs/ASOT/`) uses AI mainly in the offline data pipeline, not in the request path:
 
 - **Imagery classification**: vision model on NAIP / commercial tiles returns usable length bucket, width, surface, and lane separation as JSON with its own confidence; results are written as `evidence` rows, never as final scores
 - **LLM schema mapping**: proposes a column mapping per state DOT layer; a human approves it once and it is stored as config, not re-prompted every run

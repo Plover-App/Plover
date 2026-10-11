@@ -1,4 +1,4 @@
-// RigRoom: one Azure environment (dev, prod, later staging).
+// Plover: one Azure environment (dev, prod, later staging).
 // Deployed at subscription scope so a fresh subscription needs nothing created by hand:
 // the resource group is part of the template. Each environment is one .bicepparam file in env/.
 targetScope = 'subscription'
@@ -17,7 +17,7 @@ param location string
 
 @description('Short workload name used as the resource name stem.')
 @maxLength(8)
-param workloadName string = 'rigroom'
+param workloadName string = 'plover'
 
 @description('PostgreSQL major version.')
 param postgresVersion string = '17'
