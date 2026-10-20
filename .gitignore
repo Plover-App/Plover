@@ -379,3 +379,6 @@ scratch.azcli
 pipeline/dbt/target/
 pipeline/dbt/dbt_packages/
 pipeline/dbt/logs/
+
+# Obsidian vault config
+.obsidian/
